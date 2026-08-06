@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Tasks template for modernization plan. Generate this file alongside plan.md to track individual migration tasks.",
+  "tasks": [
+    {
+      "type": "transform",
+      "id": "001-transform-log-to-console",
+      "description": "Migrate logging from file-based rolling appender output to console (stdout) logging to meet cloud-native container requirements.",
+      "reason": "The application currently uses a Logback RollingFileAppender that writes logs to a local file path (./logs/). Container and Azure-hosted environments do not persist local files across restarts and rely on stdout/stderr for log aggregation. Console logging is required before containerization and deployment.",
+      "requirements": "Remove the RollingFileAppender and all file-based appender configuration from logback.xml. Ensure all log output, including the root logger and the edu.wisc logger, is routed to console (stdout/stderr). Retain existing log levels. The application must build and all unit tests must pass after the change.",
+      "skills": [
+        {
+          "name": "migration-log-to-console",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true"
+      }
+    },
+    {
+      "type": "security",
+      "id": "002-security-cve-remediation",
+      "description": "Scan all project dependencies for known CVEs and remediate identified vulnerabilities to ensure the application is secure before deployment.",
+      "reason": "The project uses several old dependency versions (commons-io 2.6, org.json 20171018, commons-lang3 3.7, Spring Boot 1.5.9) that are end-of-life and carry known security vulnerabilities. Dependency CVE remediation must be completed before deploying to Azure.",
+      "requirements": "Upgrade vulnerable dependencies to the minimum patched version that resolves each CVE. If a CVE fix requires a major version upgrade, document the affected dependency, the current version, the upgraded major version, and the breaking change risk. Verify that the project builds and all unit tests pass after remediation.",
+      "dependencies": [
+        "001-transform-log-to-console"
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true"
+      },
+      "skills": [
+        {
+          "name": "validate-cves-and-fix",
+          "location": "builtin"
+        }
+      ]
+    },
+    {
+      "type": "deployment",
+      "id": "003-deployment-azure-container-apps",
+      "description": "Containerize the application and deploy it to Azure Container Apps.",
+      "reason": "The application needs to be containerized and hosted on a managed Azure platform. Azure Container Apps provides serverless container hosting with built-in ingress, scaling, and managed identity support, making it the default deployment target for Spring Boot applications.",
+      "requirements": "Generate a Dockerfile for the Spring Boot WAR/JAR application. Provision the required Azure Container Apps environment and container app resource. Deploy the containerized application. Use Managed Identity for authentication where applicable.",
+      "dependencies": [
+        "002-security-cve-remediation"
+      ],
+      "targetAzureService": "azurecontainerapp",
+      "resourceStatus": "new — create new Azure Container Apps environment and container app",
+      "deploymentTool": "bicep",
+      "skills": [
+        {
+          "name": "azcli-containerapp-deploy",
+          "location": "builtin"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "planName": "modernization_plan",
+    "projectName": "uportal-messaging",
+    "language": "java",
+    "createdAt": "2026-08-06T12:48:25.000Z",
+    "version": "1.0"
+  }
+}
