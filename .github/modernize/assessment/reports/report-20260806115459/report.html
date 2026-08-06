@@ -1,0 +1,2513 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Assessment - uportal-messaging</title>
+<style>
+:root {
+  --bg-primary: #ffffff;
+  --bg-card: #f8f9fa;
+  --bg-page: #f0f1f3;
+  --text-primary: #24292f;
+  --text-secondary: #57606a;
+  --text-muted: #6b7280;
+  --border-color: #d0d7de;
+  --border-light: #e1e4e8;
+  --link-color: #2563eb;
+  --color-mandatory: #E3008C;
+  --color-potential: #637CEF;
+  --color-optional: #A19F9D;
+  --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --font-mono: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-family); font-size: 13px; color: var(--text-primary); background: var(--bg-primary); line-height: 1.5; margin: 0; padding: 0; }
+a { color: var(--link-color); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Page layout ───────────────────────────────────────────── */
+.main { margin: 0; padding: 24px 32px; background: var(--bg-primary); }
+.back-link { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; display: block; }
+h1 { font-weight: 600; font-size: 20px; color: var(--text-primary); margin-bottom: 20px; }
+
+/* ── Report cards (matches VS Code .vscode-report-card) ──── */
+.report-card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 4px; padding: 12px; margin-bottom: 20px; }
+.report-card h2 { font-size: 14px; font-weight: 600; margin: 0; color: var(--text-primary); }
+.report-card-body { margin-top: 16px; }
+
+/* ── Component Information (two-column) ────────────────── */
+.app-info-container { display: flex; gap: 8px; flex-wrap: wrap; }
+.app-info-column { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 8px; }
+.app-info-row { display: flex; align-items: baseline; }
+.app-info-label { width: 136px; flex-shrink: 0; font-weight: 600; color: var(--text-primary); }
+.app-info-value { flex: 1; color: var(--text-primary); }
+
+/* ── Issue Summary (pie charts + legend) ─────────────────── */
+.cards-container { display: flex; align-items: stretch; gap: 20px; flex-wrap: wrap; }
+.issue-summary-card { flex: 2; }
+.domain-summary-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around; }
+.domain-summary-item { flex: 1; min-width: 120px; text-align: center; padding: 0 16px; border-right: 1px solid var(--border-light); }
+.domain-summary-item:last-child { border-right: none; }
+.domain-summary-item h3 { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-top: 8px; }
+.domain-summary-item .count { font-size: 12px; color: var(--text-secondary); }
+.criticality-legend { display: flex; flex-wrap: wrap; gap: 15px; padding-top: 12px; justify-content: center; }
+.criticality-legend .legend-item { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-secondary); }
+.legend-swatch { display: inline-block; width: 1em; height: 1em; border-radius: 2px; }
+
+/* ── Issue list tables ───────────────────────────────────── */
+.issue-section { margin-top: 20px; }
+.issue-section h2 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.issue-table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 600px; }
+.issue-table th { text-align: left; text-transform: uppercase; font-weight: 600; font-size: calc(13px * 0.875); padding: 6px 8px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); color: var(--text-secondary); position: sticky; top: 0; z-index: 1; }
+.issue-table td { padding: 12px 8px; border-bottom: 1px solid var(--border-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
+.col-issue { width: 55%; }
+.col-criticality { width: 25%; }
+.col-storypoint { width: 20%; }
+
+/* ── Target dropdown ─────────────────────────────────────── */
+.target-select-container { margin: 4px 0 16px 0; display: flex; align-items: center; gap: 8px; }
+.target-select-container label { font-weight: 600; color: var(--text-primary); font-size: 14px; }
+.target-select-container select { font-family: var(--font-family); font-size: 13px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); cursor: pointer; }
+
+/* ── Filter bar ──────────────────────────────────────────── */
+.filter-bar { display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0 8px 0; align-items: center; }
+.multi-select { position: relative; display: inline-block; min-width: 140px; }
+.multi-select-btn { font-family: var(--font-family); font-size: 13px; padding: 4px 24px 4px 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); cursor: pointer; width: 100%; text-align: left; position: relative; white-space: nowrap; }
+.multi-select-btn::after { content: '\25BE'; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text-secondary); }
+.multi-select-dropdown { display: none; position: absolute; top: 100%; left: 0; min-width: 100%; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 100; margin-top: 2px; }
+.multi-select.open .multi-select-dropdown { display: block; }
+.multi-select-option { display: flex; align-items: center; gap: 6px; padding: 5px 10px; cursor: pointer; font-size: 13px; white-space: nowrap; }
+.multi-select-option:hover { background: var(--bg-secondary); }
+.multi-select-option input[type=checkbox] { margin: 0; cursor: pointer; }
+.clear-filters { font-size: 12px; color: var(--link-color); cursor: pointer; margin-left: 4px; }
+
+/* ── Criticality labels (colored square + text) ──────────── */
+.crit-label { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; }
+.crit-square { display: inline-block; width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.crit-square-mandatory { background: var(--color-mandatory); }
+.crit-square-potential { background: var(--color-potential); }
+.crit-square-optional { background: var(--color-optional); }
+
+/* ── Expandable rows ─────────────────────────────────────── */
+.expand-btn { background: none; border: none; cursor: pointer; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 11px; transition: transform 0.15s; padding: 0; vertical-align: middle; flex-shrink: 0; }
+.expand-btn.open { transform: rotate(90deg); }
+.issue-title-cell { display: flex; align-items: center; gap: 4px; }
+.detail-row td { padding: 0; border-bottom: 1px solid var(--border-light); white-space: normal; overflow: visible; text-overflow: clip; }
+.detail-content { display: flex; gap: 0; padding: 8px 8px 8px 32px; min-width: 0; }
+.file-list { flex: 0 0 50%; min-width: 0; overflow: hidden; }
+.file-list table { width: 100%; border-collapse: collapse; }
+.file-list th { font-size: calc(13px * 0.875); text-transform: uppercase; font-weight: 600; color: var(--text-secondary); padding: 6px 8px; border-bottom: 1px solid var(--border-color); text-align: left; height: 32px; }
+.file-list td { font-size: 13px; padding: 6px 8px; border-bottom: 1px solid var(--border-light); color: var(--text-primary); }
+.file-list .file-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 300px; display: block; }
+.file-list .position { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+.explanation-panel { flex: 1; padding-left: 16px; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; }
+.explanation-panel h4 { font-size: calc(13px * 0.875); text-transform: uppercase; font-weight: 600; color: var(--text-secondary); padding: 6px 0; border-bottom: 1px solid var(--border-color); height: 32px; margin: 0; }
+.explanation-panel p { font-size: 13px; padding: 8px 0; color: var(--text-primary); line-height: 1.6; white-space: normal; word-break: break-word; }
+
+/* ── Experimental badge ──────────────────────────────────── */
+.badge-experimental { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #fef9c3; color: #854d0e; vertical-align: middle; margin-left: 8px; cursor: default; }
+
+/* ── Footer ──────────────────────────────────────────────── */
+.footer { text-align: center; margin-top: 24px; color: var(--text-muted); font-size: 13px; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .main { padding: 16px; }
+  .app-info-container { flex-direction: column; }
+  .domain-summary-container { flex-direction: column; }
+  .domain-summary-item { border-right: none; border-bottom: 1px solid var(--border-light); padding-bottom: 12px; }
+  .detail-content { flex-direction: column; }
+  .file-list { flex: none; width: 100%; }
+  .explanation-panel { padding-left: 0; padding-top: 8px; }
+}
+/* ── Tab navigation ──────────────────────────────────────── */
+.tab-nav { display: flex; gap: 0; border-bottom: 1px solid var(--border-color); margin-bottom: 28px; flex-wrap: wrap; }
+.tab-btn { background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 18px; font-size: 13px; font-family: var(--font-family); color: var(--text-secondary); cursor: pointer; margin-bottom: -1px; white-space: nowrap; position: relative; }
+.tab-btn:hover { color: var(--text-primary); }
+.tab-btn.active { color: var(--link-color); border-bottom-color: var(--link-color); font-weight: 600; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Tooltip on tab ──────────────────────────────────────── */
+.tab-btn[data-tooltip]::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #24292f; color: #ffffff; font-size: 12px; font-weight: 400; padding: 6px 10px; border-radius: 4px; white-space: normal; width: max-content; max-width: 260px; text-align: center; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 100; }
+.tab-btn[data-tooltip]:hover::after { opacity: 1; }
+
+/* ── Fact content — prose column ─────────────────────────── */
+.fact-content { max-width: 860px; margin: 0 auto; line-height: 1.75; color: var(--text-primary); font-size: 14px; }
+.fact-content h1 { font-size: 22px; font-weight: 700; margin: 0 0 6px 0; color: var(--text-primary); letter-spacing: -0.01em; }
+.fact-content h1 + p { margin-top: 6px; color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; }
+.fact-content h2 { font-size: 17px; font-weight: 700; margin: 36px 0 12px 0; padding-bottom: 6px; border-bottom: 1px solid var(--border-color); color: var(--text-primary); letter-spacing: -0.01em; }
+.fact-content h3 { font-size: 14px; font-weight: 700; margin: 24px 0 8px 0; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.04em; font-size: 12px; color: var(--text-secondary); }
+.fact-content p { margin: 10px 0; color: var(--text-primary); }
+.fact-content ul, .fact-content ol { margin: 10px 0 10px 22px; }
+.fact-content li { margin: 5px 0; }
+.fact-content a { color: var(--link-color); }
+.fact-content a:hover { text-decoration: underline; }
+
+/* ── Fact tables ─────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+.fact-content table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 13px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); }
+.fact-content thead { background: var(--bg-card); }
+.fact-content th { text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 14px; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); }
+.fact-content td { padding: 9px 14px; border-bottom: 1px solid var(--border-light); vertical-align: top; color: var(--text-primary); }
+.fact-content tr:last-child td { border-bottom: none; }
+.fact-content tbody tr:hover { background: #f6f8fa; }
+
+/* ── Fact code ───────────────────────────────────────────── */
+.fact-content code { font-family: var(--font-mono); font-size: 12px; background: #f0f1f3; padding: 2px 6px; border-radius: 4px; color: #c7254e; }
+.fact-content pre { background: #f6f8fa; border: 1px solid var(--border-light); border-radius: 6px; padding: 14px 16px; overflow-x: auto; margin: 14px 0; }
+.fact-content pre code { background: none; color: var(--text-primary); padding: 0; border-radius: 0; }
+.fact-content hr { border: none; border-top: 1px solid var(--border-light); margin: 28px 0; }
+.fact-content strong { font-weight: 600; }
+.fact-content em { font-style: italic; }
+.fact-content blockquote { border-left: 3px solid var(--border-color); margin: 12px 0; padding: 4px 16px; color: var(--text-secondary); }
+.fact-unavailable { padding: 32px 0; }
+.fact-unavailable h3 { font-size: 16px; font-weight: 600; color: var(--text-primary); text-transform: none; letter-spacing: 0; margin: 0 0 12px 0; }
+.fact-unavailable p { margin: 0 0 8px 0; color: var(--text-secondary); }
+.fact-unavailable ol, .fact-unavailable ul { margin: 0 0 0 22px; color: var(--text-primary); }
+.fact-unavailable li { margin: 6px 0; }
+
+/* ── Mermaid diagram card ─────────────────────────────────── */
+.mermaid { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; padding: 24px 16px; margin: 20px 0; overflow-x: auto; text-align: center; cursor: pointer; position: relative; }
+.mermaid:hover { border-color: var(--border-color); }
+.mermaid svg { max-width: 100%; height: auto !important; display: inline-block; }
+.mermaid-zoom-hint { position: absolute; top: 8px; right: 10px; font-size: 11px; color: var(--text-muted); opacity: 0; transition: opacity 0.15s; pointer-events: none; }
+.mermaid:hover .mermaid-zoom-hint { opacity: 1; }
+
+/* ── Diagram lightbox ────────────────────────────────────── */
+.diagram-lightbox { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); align-items: center; justify-content: center; cursor: zoom-out; padding: 48px 32px; }
+.diagram-lightbox.open { display: flex; }
+.diagram-lightbox-inner { background: #ffffff; border-radius: 10px; padding: 32px; width: 88vw; max-height: 88vh; overflow: hidden; cursor: default; box-shadow: 0 24px 64px rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; }
+.diagram-lightbox-inner svg { width: 100% !important; height: auto !important; max-height: 76vh; display: block; }
+.diagram-lightbox-close { position: fixed; top: 20px; right: 24px; background: #ffffff; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-primary); box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 1001; }
+.diagram-lightbox-close:hover { background: var(--bg-card); }
+.diagram-lightbox-hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.55); color: #ffffff; font-size: 12px; padding: 6px 14px; border-radius: 20px; pointer-events: none; white-space: nowrap; z-index: 1001; }
+</style>
+<script>
+window.__mermaidPending = [];
+window.__mermaidReady = false;
+window.__renderMermaidIn = function(container) {
+  if (container) { window.__mermaidPending.push(container); }
+};
+</script>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: false, theme: 'default', flowchart: { useMaxWidth: true }, sequence: { useMaxWidth: true } });
+
+window.__renderMermaidIn = function(container) {
+  var nodes = container ? container.querySelectorAll('.mermaid:not([data-processed])') : [];
+  if (nodes.length > 0) {
+    mermaid.run({ nodes: Array.from(nodes) }).then(function() {
+      nodes.forEach(function(node) {
+        if (!node.querySelector('.mermaid-zoom-hint')) {
+          var hint = document.createElement('span');
+          hint.className = 'mermaid-zoom-hint';
+          hint.textContent = 'Click to expand';
+          node.appendChild(hint);
+        }
+      });
+    });
+  }
+};
+
+var drained = new Set();
+(window.__mermaidPending || []).forEach(function(c) {
+  if (!drained.has(c)) { drained.add(c); window.__renderMermaidIn(c); }
+});
+window.__mermaidPending = [];
+window.__mermaidReady = true;
+
+function renderActivePanels() {
+  document.querySelectorAll('.tab-panel.active').forEach(function(p) {
+    if (!drained.has(p)) { drained.add(p); window.__renderMermaidIn(p); }
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderActivePanels);
+} else {
+  renderActivePanels();
+}
+</script>
+</head><body>
+<div id="diagram-lightbox" class="diagram-lightbox" role="dialog" aria-modal="true">
+  <button class="diagram-lightbox-close" id="diagram-lightbox-close" aria-label="Close">&#x2715;</button>
+  <div class="diagram-lightbox-hint">Scroll to zoom &nbsp;&middot;&nbsp; Drag to pan &nbsp;&middot;&nbsp; Double-click to reset</div>
+  <div class="diagram-lightbox-inner" id="diagram-lightbox-inner"></div>
+</div>
+<div class="main">
+<h1>uportal-messaging</h1>
+<div class="report-card">
+  <h2>Component Information</h2>
+  <div class="report-card-body">
+    <div class="app-info-container">
+      <div class="app-info-column">
+        <div class="app-info-row"><span class="app-info-label">Component Name</span><span class="app-info-value">uportal-messaging</span></div>
+        <div class="app-info-row"><span class="app-info-label">Java Version</span><span class="app-info-value">1.8</span></div>
+        <div class="app-info-row"><span class="app-info-label">Effort</span><span class="app-info-value" id="effort-display">L (total story points: 82)</span></div>
+      </div>
+      <div class="app-info-column">
+        <div class="app-info-row"><span class="app-info-label">Build Tools</span><span class="app-info-value">Maven</span></div>
+        <div class="app-info-row"><span class="app-info-label">Frameworks</span><span class="app-info-value">Spring Boot, Spring</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="tab-issues" data-tooltip="Issues detected in the source code">Issues</button>
+  <button class="tab-btn" data-tab="tab-arch" data-tooltip="How the app&#x27;s layers connect — from UI to data.">Architecture</button>
+  <button class="tab-btn" data-tab="tab-api" data-tooltip="Endpoints exposed by this app and how services communicate.">API Contracts</button>
+  <button class="tab-btn" data-tab="tab-config" data-tooltip="Environment settings, runtime profiles, and deployment manifests.">Configuration</button>
+  <button class="tab-btn" data-tab="tab-workflows" data-tooltip="Domain entities and the core flows users move through.">Business Workflows</button>
+  <button class="tab-btn" data-tab="tab-deps" data-tooltip="Libraries and frameworks this app depends on, grouped by category.">Dependencies</button>
+  <button class="tab-btn" data-tab="tab-data" data-tooltip="Database schema, entity relationships, and persistence behavior.">Data Model</button>
+</nav>
+<div id="tab-issues" class="tab-panel active">
+<div class="target-select-container">
+  <label for="target-select">Target Compute Service:</label>
+  <select id="target-select" onchange="onTargetChange(this.value)">
+    <option value="azure-appservice">Azure App Service</option>
+    <option value="azure-aks">Azure Kubernetes Service</option>
+    <option value="azure-container-apps">Azure Container Apps</option>
+  </select>
+</div>
+<div class="report-card">
+  <h2>Issue Summary</h2>
+  <div class="report-card-body">
+    <div class="domain-summary-container" id="donut-container">
+      <div class="domain-summary-item">
+<svg viewBox="0 0 100 100" width="100" height="100" style="display:block;margin:0 auto;transform:rotate(-90deg);">
+  <circle cx="50" cy="50" r="35" fill="none" stroke="var(--color-mandatory)" stroke-width="15" stroke-dasharray="219.91 219.91" stroke-dashoffset="-0.00"/>
+</svg>
+
+        <h3>Cloud Readiness</h3>
+        <div class="count">3 issues</div>
+      </div>
+      <div class="domain-summary-item">
+<svg viewBox="0 0 100 100" width="100" height="100" style="display:block;margin:0 auto;transform:rotate(-90deg);">
+  <circle cx="50" cy="50" r="35" fill="none" stroke="var(--color-mandatory)" stroke-width="15" stroke-dasharray="219.91 219.91" stroke-dashoffset="-0.00"/>
+</svg>
+
+        <h3>Java Upgrade</h3>
+        <div class="count">1 issue</div>
+      </div>
+      <div class="domain-summary-item">
+<svg viewBox="0 0 100 100" width="100" height="100" style="display:block;margin:0 auto;transform:rotate(-90deg);">
+  <circle cx="50" cy="50" r="35" fill="none" stroke="var(--color-mandatory)" stroke-width="15" stroke-dasharray="203.50 219.91" stroke-dashoffset="-0.00"/>
+  <circle cx="50" cy="50" r="35" fill="none" stroke="var(--color-potential)" stroke-width="15" stroke-dasharray="9.68 219.91" stroke-dashoffset="-205.00"/>
+  <circle cx="50" cy="50" r="35" fill="none" stroke="var(--color-optional)" stroke-width="15" stroke-dasharray="2.23 219.91" stroke-dashoffset="-216.18"/>
+</svg>
+
+        <h3>Security</h3>
+        <div class="count">59 issues</div>
+      </div>
+    </div>
+    <div class="criticality-legend">
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--color-mandatory)"></span>Mandatory</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--color-potential)"></span>Potential</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--color-optional)"></span>Optional</div>
+    </div>
+  </div>
+</div>
+<div class="filter-bar" id="filter-bar">
+  <div class="multi-select" id="domain-ms">
+    <button class="multi-select-btn" onclick="toggleMultiSelect('domain-ms')">Domain</button>
+    <div class="multi-select-dropdown">
+      <label class="multi-select-option"><input type="checkbox" value="cloud-readiness" onchange="onMultiSelectChange('domain-ms','Domain')"/> Cloud Readiness</label>
+      <label class="multi-select-option"><input type="checkbox" value="java-upgrade" onchange="onMultiSelectChange('domain-ms','Domain')"/> Java Upgrade</label>
+      <label class="multi-select-option"><input type="checkbox" value="security" onchange="onMultiSelectChange('domain-ms','Domain')"/> Security</label>
+    </div>
+  </div>
+  <div class="multi-select" id="criticality-ms">
+    <button class="multi-select-btn" onclick="toggleMultiSelect('criticality-ms')">Criticality</button>
+    <div class="multi-select-dropdown">
+      <label class="multi-select-option"><input type="checkbox" value="mandatory" onchange="onMultiSelectChange('criticality-ms','Criticality')"/> Mandatory</label>
+      <label class="multi-select-option"><input type="checkbox" value="potential" onchange="onMultiSelectChange('criticality-ms','Criticality')"/> Potential</label>
+      <label class="multi-select-option"><input type="checkbox" value="optional" onchange="onMultiSelectChange('criticality-ms','Criticality')"/> Optional</label>
+    </div>
+  </div>
+  <a class="clear-filters" href="javascript:void(0)" onclick="clearAllFilters()">Clear all</a>
+</div>
+<div class="issue-section" data-domain="cloud-readiness">
+  <h2>Cloud Readiness</h2>
+  <table class="issue-table">
+    <colgroup><col class="col-issue"/><col class="col-criticality"/><col class="col-storypoint"/></colgroup>
+    <thead><tr><th>Issue Category</th><th>Criticality</th><th>Story Point</th></tr></thead>
+    <tbody>
+    <tr class="issue-row" data-criticality="mandatory" data-targets='{&quot;azure-aks&quot;:{&quot;effort&quot;:3,&quot;severity&quot;:&quot;mandatory&quot;},&quot;azure-appservice&quot;:{&quot;effort&quot;:3,&quot;severity&quot;:&quot;mandatory&quot;},&quot;azure-container-apps&quot;:{&quot;effort&quot;:3,&quot;severity&quot;:&quot;mandatory&quot;}}' data-default-effort="3" data-default-severity="mandatory" data-rule="unsecure-network-protocol-00000" onclick="toggleRow('row-cloudreadiness-0', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-cloudreadiness-0">&#x276F;</button> Use of unsecured network protocols or URI libraries</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">3</td>
+    </tr>
+    <tr class="detail-row" id="row-cloudreadiness-0" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><colgroup><col style="width:70%"/><col style="width:30%"/></colgroup>
+            <thead><tr><th>File</th><th>Position</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="src/test/java/edu/wisc/my/messages/controller/MessagesControllerIT.java">src/test/java/edu/wisc/my/messages/controller/MessagesControllerIT.java</span></td><td><span class="position">Line 32</span></td></tr>
+            <tr><td><span class="file-path" title="src/test/java/edu/wisc/my/messages/controller/MessagesControllerTest.java">src/test/java/edu/wisc/my/messages/controller/MessagesControllerTest.java</span></td><td><span class="position">Line 81</span></td></tr>
+            <tr><td><span class="file-path" title="src/test/java/edu/wisc/my/messages/model/ActionButtonTest.java">src/test/java/edu/wisc/my/messages/model/ActionButtonTest.java</span></td><td><span class="position">Line 14</span></td></tr>
+            <tr><td><span class="file-path" title="src/test/java/edu/wisc/my/messages/model/ActionButtonTest.java">src/test/java/edu/wisc/my/messages/model/ActionButtonTest.java</span></td><td><span class="position">Line 17</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p>Using secured protocols such as HTTPS and SFTP (over HTTP and FTP) should now be the norm as applications are more and more exposed and interconnected. <br/>This CloudReady patterns looks for unescured URI in the source code or deprecated URI libraries. <br/>Ideally, URLs should be replaced in your source code by secured protocols HTTPS and SFTP (and ensure the infrastructure implements these protocols for the resources your application calls, uses or references).</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" data-targets='{&quot;azure-aks&quot;:{&quot;effort&quot;:3,&quot;severity&quot;:&quot;mandatory&quot;},&quot;azure-appservice&quot;:{&quot;effort&quot;:3,&quot;severity&quot;:&quot;mandatory&quot;},&quot;azure-container-apps&quot;:{&quot;effort&quot;:3,&quot;severity&quot;:&quot;mandatory&quot;}}' data-default-effort="3" data-default-severity="mandatory" data-rule="localhost-http-00001" onclick="toggleRow('row-cloudreadiness-1', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-cloudreadiness-1">&#x276F;</button> Local HTTP Calls</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">3</td>
+    </tr>
+    <tr class="detail-row" id="row-cloudreadiness-1" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><colgroup><col style="width:70%"/><col style="width:30%"/></colgroup>
+            <thead><tr><th>File</th><th>Position</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="src/test/java/edu/wisc/my/messages/controller/MessagesControllerIT.java">src/test/java/edu/wisc/my/messages/controller/MessagesControllerIT.java</span></td><td><span class="position">Line 32</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p>The app is trying to access local resource by HTTP, please try to migrate the resource to cloud</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" data-targets='{&quot;azure-aks&quot;:{&quot;effort&quot;:3,&quot;severity&quot;:&quot;mandatory&quot;},&quot;azure-container-apps&quot;:{&quot;effort&quot;:3,&quot;severity&quot;:&quot;mandatory&quot;}}' data-default-effort="3" data-default-severity="mandatory" data-rule="dockerfile-00000" onclick="toggleRow('row-cloudreadiness-2', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-cloudreadiness-2">&#x276F;</button> No Dockerfile found</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">3</td>
+    </tr>
+    <tr class="detail-row" id="row-cloudreadiness-2" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><colgroup><col style="width:70%"/><col style="width:30%"/></colgroup>
+            <thead><tr><th>File</th><th>Position</th></tr></thead><tbody>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p>No Dockerfile was found in the project. This suggests the application may not yet be containerized. <br/>Consider creating a Dockerfile to enable container-based replatforming to Azure services such as Azure Container Apps or AKS.</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="issue-section" data-domain="java-upgrade">
+  <h2>Java Upgrade</h2>
+  <table class="issue-table">
+    <colgroup><col class="col-issue"/><col class="col-criticality"/><col class="col-storypoint"/></colgroup>
+    <thead><tr><th>Issue Category</th><th>Criticality</th><th>Story Point</th></tr></thead>
+    <tbody>
+    <tr class="issue-row" data-criticality="mandatory" data-targets='{&quot;azure-aks&quot;:{&quot;effort&quot;:8,&quot;severity&quot;:&quot;mandatory&quot;},&quot;azure-appservice&quot;:{&quot;effort&quot;:8,&quot;severity&quot;:&quot;mandatory&quot;},&quot;azure-container-apps&quot;:{&quot;effort&quot;:8,&quot;severity&quot;:&quot;mandatory&quot;}}' data-default-effort="8" data-default-severity="mandatory" data-rule="azure-java-version-01000" onclick="toggleRow('row-javaupgrade-0', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-javaupgrade-0">&#x276F;</button> Java Version Has Reached the End of Support</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">8</td>
+    </tr>
+    <tr class="detail-row" id="row-javaupgrade-0" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><colgroup><col style="width:70%"/><col style="width:30%"/></colgroup>
+            <thead><tr><th>File</th><th>Position</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td><td><span class="position">Line 122</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p>The application is using a Java version that has reached the end of support. It is strongly recommended to plan and execute a migration strategy to upgrade your application to a supported Java version.<br/>Supported Java versions receive long-term support (LTS) from the Java community, including bug fixes and updates. Migrating to a supported version provides you with a stable and well-maintained platform for your application.</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="issue-section" data-domain="security">
+  <h2>Security <span class="badge-experimental" title="These issues were generated by AI and may contain inaccuracies or incomplete information. Please review carefully.">Experimental</span></h2>
+  <table class="issue-table">
+    <colgroup><col class="col-issue"/><col class="col-criticality"/><col class="col-storypoint"/></colgroup>
+    <thead><tr><th>Issue Category</th><th>Criticality</th><th>Story Point</th></tr></thead>
+    <tbody>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-0', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-0">&#x276F;</button> GHSA-r7wm-3cxj-wff9: jackson-core: Async parser maxNumberLength bypass via chunked digit accumulation (incomplete fix for GHSA-72hv-8253-57qq)</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-0" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-r7wm-3cxj-wff9" target="_blank" rel="noopener noreferrer">GHSA-r7wm-3cxj-wff9</a>: jackson-core: Async parser maxNumberLength bypass via chunked digit accumulation (incomplete fix for GHSA-72hv-8253-57qq)</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-core:2.8.10 (vulnerable range: &lt; 2.18.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.18.8<br/>  - com.fasterxml.jackson.core:jackson-core:2.8.10 (vulnerable range: &gt;= 2.19.0, &lt; 2.21.4) (declared at pom.xml)<br/>    Fix: Upgrade to 2.21.4</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-1', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-1">&#x276F;</button> CVE-2026-41850: Spring Framework Algorithmic Denial of Service via SpEL Expressions</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-1" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-r5w3-xv2f-j59q" target="_blank" rel="noopener noreferrer">CVE-2026-41850</a>: Spring Framework Algorithmic Denial of Service via SpEL Expressions</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: &gt;= 7.0.0, &lt;= 7.0.7) (declared at pom.xml)<br/>    Fix: Upgrade to 7.0.8<br/>  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: &gt;= 6.2.0, &lt;= 6.2.18) (declared at pom.xml)<br/>    Fix: Upgrade to 6.2.19<br/>  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: &gt;= 6.1.0, &lt;= 6.1.21) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory<br/>  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: &lt;= 5.3.39) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-2', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-2">&#x276F;</button> CVE-2026-41849: Spring Framework Denial of Service via Integer Overflow in SpEL Expressions</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-2" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-775g-4xr8-78h8" target="_blank" rel="noopener noreferrer">CVE-2026-41849</a>: Spring Framework Denial of Service via Integer Overflow in SpEL Expressions</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: &lt;= 5.3.39) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-3', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-3">&#x276F;</button> CVE-2026-41845: Spring Framework Cross-site Scripting via JavaScriptUtils</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-3" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-3chg-m5w7-qfv5" target="_blank" rel="noopener noreferrer">CVE-2026-41845</a>: Spring Framework Cross-site Scripting via JavaScriptUtils</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &gt;= 7.0.0, &lt;= 7.0.7) (declared at pom.xml)<br/>    Fix: Upgrade to 7.0.8<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &gt;= 6.2.0, &lt;= 6.2.18) (declared at pom.xml)<br/>    Fix: Upgrade to 6.2.19<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &gt;= 6.1.0, &lt;= 6.1.21) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &lt;= 5.3.39) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-4', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-4">&#x276F;</button> CVE-2026-41842: Spring Framework Denial of Service via Versioned Resources in Spring MVC and WebFlux</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-4" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-x23c-287f-qqv5" target="_blank" rel="noopener noreferrer">CVE-2026-41842</a>: Spring Framework Denial of Service via Versioned Resources in Spring MVC and WebFlux</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &gt;= 7.0.0, &lt;= 7.0.7) (declared at pom.xml)<br/>    Fix: Upgrade to 7.0.8<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &gt;= 6.2.0, &lt;= 6.2.18) (declared at pom.xml)<br/>    Fix: Upgrade to 6.2.19<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &gt;= 6.1.0, &lt;= 6.1.21) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &lt;= 5.3.39) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-5', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-5">&#x276F;</button> CVE-2026-41284: Apache Tomcat: Unbounded read in WebDAV LOCK and  PROPFIND handling</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-5" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-gx5v-xp9w-j4cg" target="_blank" rel="noopener noreferrer">CVE-2026-41284</a>: Apache Tomcat: Unbounded read in WebDAV LOCK and  PROPFIND handling</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &lt; 9.0.118) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.118<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.55) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.55<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.22) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.22</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-6', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-6">&#x276F;</button> CVE-2026-43512: Apache Tomcat - Digest authenticator will authenticate any unknown user</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-6" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-h6fc-48rj-7qqh" target="_blank" rel="noopener noreferrer">CVE-2026-43512</a>: Apache Tomcat - Digest authenticator will authenticate any unknown user</p><p>Severity: CRITICAL</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &lt; 9.0.118) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.118<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.55) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.55<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.22) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.22</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-7', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-7">&#x276F;</button> CVE-2026-43513: Apache Tomcat: LockOutRealm treats user names as case-sensitive</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-7" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-5mp6-jrq3-r938" target="_blank" rel="noopener noreferrer">CVE-2026-43513</a>: Apache Tomcat: LockOutRealm treats user names as case-sensitive</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &lt; 9.0.118) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.118<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.55) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.55<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.22) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.22</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-8', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-8">&#x276F;</button> CVE-2026-43515: Apache Tomcat - Security constraints not correctly applied</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-8" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-5m62-pw8w-7w9f" target="_blank" rel="noopener noreferrer">CVE-2026-43515</a>: Apache Tomcat - Security constraints not correctly applied</p><p>Severity: CRITICAL</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &lt; 9.0.118) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.118<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.55) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.55<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.22) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.22</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-9', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-9">&#x276F;</button> CVE-2026-41293: Apache Tomcat - HTTP/2 request headers not validated</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-9" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-r29c-68gh-xp6x" target="_blank" rel="noopener noreferrer">CVE-2026-41293</a>: Apache Tomcat - HTTP/2 request headers not validated</p><p>Severity: CRITICAL</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &lt; 9.0.118) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.118<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.55) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.55<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.22) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.22</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-10', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-10">&#x276F;</button> CVE-2026-42498: Apache Tomcat - WebSocket authentication header exposure</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-10" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-fv25-8xcx-gqjc" target="_blank" rel="noopener noreferrer">CVE-2026-42498</a>: Apache Tomcat - WebSocket authentication header exposure</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &lt; 9.0.118) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.118<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.55) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.55<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.22) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.22</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-11', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-11">&#x276F;</button> CVE-2026-24880: Apache Tomcat has an HTTP Request/Response Smuggling vulnerability</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-11" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-563x-q5rq-57qp" target="_blank" rel="noopener noreferrer">CVE-2026-24880</a>: Apache Tomcat has an HTTP Request/Response Smuggling vulnerability</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 7.0.0, &lt; 9.0.116) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.116<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.52) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.52<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt;= 11.0.18) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.20</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-12', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-12">&#x276F;</button> CVE-2025-55752: Apache Tomcat Vulnerable to Relative Path Traversal</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-12" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-wmwf-9ccg-fff5" target="_blank" rel="noopener noreferrer">CVE-2025-55752</a>: Apache Tomcat Vulnerable to Relative Path Traversal</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.11) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.11<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.45) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.45<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0-M11, &lt; 9.0.109) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.109<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.6, &lt;= 8.5.100) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-13', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-13">&#x276F;</button> CVE-2025-53506: Apache Tomcat Coyote vulnerable to Denial of Service via excessive HTTP/2 streams</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-13" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-25xr-qj8w-c4vf" target="_blank" rel="noopener noreferrer">CVE-2025-53506</a>: Apache Tomcat Coyote vulnerable to Denial of Service via excessive HTTP/2 streams</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.0, &lt;= 8.5.100) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0.M1, &lt; 9.0.107) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.107<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.43) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.43<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.9) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.9</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-14', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-14">&#x276F;</button> CVE-2025-52520: Apache Tomcat Catalina is vulnerable to DoS attack through bypassing of size limits</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-14" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-wr62-c79q-cv37" target="_blank" rel="noopener noreferrer">CVE-2025-52520</a>: Apache Tomcat Catalina is vulnerable to DoS attack through bypassing of size limits</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.9) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.9<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.43) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.43<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0.M1, &lt; 9.0.107) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.107<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.0, &lt;= 8.5.100) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-15', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-15">&#x276F;</button> CVE-2025-52999: jackson-core can throw a StackoverflowError when processing deeply nested data</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-15" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-h46c-h94j-95f3" target="_blank" rel="noopener noreferrer">CVE-2025-52999</a>: jackson-core can throw a StackoverflowError when processing deeply nested data</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-core:2.8.10 (vulnerable range: &lt; 2.15.0) (declared at pom.xml)<br/>    Fix: Upgrade to 2.15.0</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-16', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-16">&#x276F;</button> CVE-2025-48988: Apache Tomcat - DoS in multipart upload</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-16" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-h3gc-qfqq-6h8f" target="_blank" rel="noopener noreferrer">CVE-2025-48988</a>: Apache Tomcat - DoS in multipart upload</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt;= 11.0.7) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.8<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt;= 10.1.41) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.42<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0.M1, &lt;= 9.0.105) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.106<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.0, &lt;= 8.5.100) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-17', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-17">&#x276F;</button> CVE-2025-24813: Apache Tomcat: Potential RCE and/or information disclosure and/or information corruption with partial PUT</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-17" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-83qj-6fr2-vhqg" target="_blank" rel="noopener noreferrer">CVE-2025-24813</a>: Apache Tomcat: Potential RCE and/or information disclosure and/or information corruption with partial PUT</p><p>Severity: CRITICAL</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.3) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.3<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.35) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.35<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0.M1, &lt; 9.0.99) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.99<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.0, &lt;= 8.5.100) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-18', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-18">&#x276F;</button> CVE-2024-38819: Spring Framework Path Traversal vulnerability</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-18" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-g5vr-rgqm-vf78" target="_blank" rel="noopener noreferrer">CVE-2024-38819</a>: Spring Framework Path Traversal vulnerability</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &gt;= 6.1.0, &lt; 6.1.14) (declared at pom.xml)<br/>    Fix: Upgrade to 6.1.14<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &lt;= 5.3.39) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &gt;= 6.0.0, &lt;= 6.0.23) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-19', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-19">&#x276F;</button> CVE-2024-50379: Apache Tomcat Time-of-check Time-of-use (TOCTOU) Race Condition vulnerability</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-19" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-5j33-cvvr-w245" target="_blank" rel="noopener noreferrer">CVE-2024-50379</a>: Apache Tomcat Time-of-check Time-of-use (TOCTOU) Race Condition vulnerability</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.2) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.2<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.34) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.34<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0.M1, &lt; 9.0.98) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.98<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.0, &lt;= 8.5.100) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-20', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-20">&#x276F;</button> CVE-2024-47554: Apache Commons IO: Possible denial of service attack on untrusted input to XmlStreamReader</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-20" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml:91">pom.xml:91</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-78wr-2p64-hpwj" target="_blank" rel="noopener noreferrer">CVE-2024-47554</a>: Apache Commons IO: Possible denial of service attack on untrusted input to XmlStreamReader</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - commons-io:commons-io:2.6 (vulnerable range: &gt;= 2.0, &lt; 2.14.0) (declared at pom.xml:91)<br/>    Fix: Upgrade to 2.14.0</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-21', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-21">&#x276F;</button> CVE-2024-34750: Apache Tomcat - Denial of Service</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-21" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-wm9w-rjj3-j356" target="_blank" rel="noopener noreferrer">CVE-2024-34750</a>: Apache Tomcat - Denial of Service</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.0-M21) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.0-M21<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.25) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.25<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0-M1, &lt; 9.0.90) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.90<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.0, &lt;= 8.5.100) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-22', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-22">&#x276F;</button> CVE-2024-22262: Spring Framework URL Parsing with Host Validation</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-22" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-2wrp-6fg6-hmc5" target="_blank" rel="noopener noreferrer">CVE-2024-22262</a>: Spring Framework URL Parsing with Host Validation</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &lt; 5.3.34) (declared at pom.xml)<br/>    Fix: Upgrade to 5.3.34<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &gt;= 6.0.0, &lt; 6.0.19) (declared at pom.xml)<br/>    Fix: Upgrade to 6.0.19<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &gt;= 6.1.0, &lt; 6.1.6) (declared at pom.xml)<br/>    Fix: Upgrade to 6.1.6</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-23', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-23">&#x276F;</button> CVE-2024-22259: Spring Framework URL Parsing with Host Validation Vulnerability</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-23" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-hgjh-9rj2-g67j" target="_blank" rel="noopener noreferrer">CVE-2024-22259</a>: Spring Framework URL Parsing with Host Validation Vulnerability</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &gt;= 6.1.0, &lt; 6.1.5) (declared at pom.xml)<br/>    Fix: Upgrade to 6.1.5<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &gt;= 6.0.0, &lt; 6.0.18) (declared at pom.xml)<br/>    Fix: Upgrade to 6.0.18<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &lt; 5.3.33) (declared at pom.xml)<br/>    Fix: Upgrade to 5.3.33</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-24', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-24">&#x276F;</button> CVE-2024-22243: Spring Web vulnerable to Open Redirect or Server Side Request Forgery</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-24" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-ccgv-vj62-xf9h" target="_blank" rel="noopener noreferrer">CVE-2024-22243</a>: Spring Web vulnerable to Open Redirect or Server Side Request Forgery</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &gt;= 6.1.0, &lt; 6.1.4) (declared at pom.xml)<br/>    Fix: Upgrade to 6.1.4<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &gt;= 6.0.0, &lt; 6.0.17) (declared at pom.xml)<br/>    Fix: Upgrade to 6.0.17<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &gt;= 5.3.0, &lt; 5.3.32) (declared at pom.xml)<br/>    Fix: Upgrade to 5.3.32<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &lt;= 5.2.25.RELEASE) (declared at pom.xml)<br/>    Fix: No patched version available; check advisory</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-25', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-25">&#x276F;</button> CVE-2023-6378: logback serialization vulnerability</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-25" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-vmq6-5m68-f53m" target="_blank" rel="noopener noreferrer">CVE-2023-6378</a>: logback serialization vulnerability</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: &gt;= 1.4.0, &lt; 1.4.12) (declared at pom.xml)<br/>    Fix: Upgrade to 1.4.12<br/>  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: &gt;= 1.4.0, &lt; 1.4.12) (declared at pom.xml)<br/>    Fix: Upgrade to 1.4.12<br/>  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: &gt;= 1.3.0, &lt; 1.3.12) (declared at pom.xml)<br/>    Fix: Upgrade to 1.3.12<br/>  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: &gt;= 1.3.0, &lt; 1.3.12) (declared at pom.xml)<br/>    Fix: Upgrade to 1.3.12<br/>  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: &lt; 1.2.13) (declared at pom.xml)<br/>    Fix: Upgrade to 1.2.13<br/>  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: &lt; 1.2.13) (declared at pom.xml)<br/>    Fix: Upgrade to 1.2.13</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-26', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-26">&#x276F;</button> CVE-2023-46589: Apache Tomcat Improper Input Validation vulnerability</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-26" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-fccv-jmmp-qg76" target="_blank" rel="noopener noreferrer">CVE-2023-46589</a>: Apache Tomcat Improper Input Validation vulnerability</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 11.0.0-M1, &lt; 11.0.0-M11) (declared at pom.xml)<br/>    Fix: Upgrade to 11.0.0-M11<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.16) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.16<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0-M1, &lt; 9.0.83) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.83<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.0, &lt; 8.5.96) (declared at pom.xml)<br/>    Fix: Upgrade to 8.5.96</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-27', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-27">&#x276F;</button> CVE-2023-20863: Spring Framework vulnerable to denial of service</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-27" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-wxqc-pxw9-g2p8" target="_blank" rel="noopener noreferrer">CVE-2023-20863</a>: Spring Framework vulnerable to denial of service</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: &gt;= 6.0.0, &lt; 6.0.8) (declared at pom.xml)<br/>    Fix: Upgrade to 6.0.8<br/>  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: &gt;= 5.3.0, &lt; 5.3.27) (declared at pom.xml)<br/>    Fix: Upgrade to 5.3.27<br/>  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: &lt; 5.2.24.RELEASE) (declared at pom.xml)<br/>    Fix: Upgrade to 5.2.24.RELEASE</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-28', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-28">&#x276F;</button> CVE-2022-1471: SnakeYaml Constructor Deserialization Remote Code Execution</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-28" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-mjmj-j48q-9wg2" target="_blank" rel="noopener noreferrer">CVE-2022-1471</a>: SnakeYaml Constructor Deserialization Remote Code Execution</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.yaml:snakeyaml:1.17 (vulnerable range: &lt;= 1.33) (declared at pom.xml)<br/>    Fix: Upgrade to 2.0</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-29', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-29">&#x276F;</button> CVE-2022-42252: Apache Tomcat may reject request containing invalid Content-Length header</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-29" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-p22x-g9px-3945" target="_blank" rel="noopener noreferrer">CVE-2022-42252</a>: Apache Tomcat may reject request containing invalid Content-Length header</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.0, &lt; 8.5.83) (declared at pom.xml)<br/>    Fix: Upgrade to 8.5.83<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0-M1, &lt; 9.0.68) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.68<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.0.0-M1, &lt; 10.0.27) (declared at pom.xml)<br/>    Fix: Upgrade to 10.0.27<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.1.0-M1, &lt; 10.1.1) (declared at pom.xml)<br/>    Fix: Upgrade to 10.1.1</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-30', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-30">&#x276F;</button> CVE-2022-42003: Uncontrolled Resource Consumption in Jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-30" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-jjjh-jjxp-wpff" target="_blank" rel="noopener noreferrer">CVE-2022-42003</a>: Uncontrolled Resource Consumption in Jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.4.0-rc1, &lt; 2.12.7.1) (declared at pom.xml)<br/>    Fix: Upgrade to 2.12.7.1<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.13.0, &lt; 2.13.4.2) (declared at pom.xml)<br/>    Fix: Upgrade to 2.13.4.2</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-31', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-31">&#x276F;</button> CVE-2022-42004: Uncontrolled Resource Consumption in FasterXML jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-31" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-rgv9-q543-rqg4" target="_blank" rel="noopener noreferrer">CVE-2022-42004</a>: Uncontrolled Resource Consumption in FasterXML jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.13.0, &lt; 2.13.4) (declared at pom.xml)<br/>    Fix: Upgrade to 2.13.4<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.4.0-rc1, &lt; 2.12.7.1) (declared at pom.xml)<br/>    Fix: Upgrade to 2.12.7.1</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-32', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-32">&#x276F;</button> CVE-2022-25857: Uncontrolled Resource Consumption in snakeyaml</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-32" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-3mc7-4q67-w48m" target="_blank" rel="noopener noreferrer">CVE-2022-25857</a>: Uncontrolled Resource Consumption in snakeyaml</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.yaml:snakeyaml:1.17 (vulnerable range: &lt; 1.31) (declared at pom.xml)<br/>    Fix: Upgrade to 1.31</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-33', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-33">&#x276F;</button> CVE-2020-10650: jackson-databind vulnerable to unsafe deserialization</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-33" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-rpr3-cw39-3pxh" target="_blank" rel="noopener noreferrer">CVE-2020-10650</a>: jackson-databind vulnerable to unsafe deserialization</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &lt;= 2.9.10.3) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.4</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-34', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-34">&#x276F;</button> CVE-2016-1000027: Pivotal Spring Framework contains unsafe Java deserialization methods</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-34" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-4wrc-f8pq-fpqp" target="_blank" rel="noopener noreferrer">CVE-2016-1000027</a>: Pivotal Spring Framework contains unsafe Java deserialization methods</p><p>Severity: CRITICAL</p><p>Affected dependencies:<br/>  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: &lt; 6.0.0) (declared at pom.xml)<br/>    Fix: Upgrade to 6.0.0</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-35', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-35">&#x276F;</button> CVE-2022-22970: Denial of service in Spring Framework</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-35" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-hh26-6xwr-ggv7" target="_blank" rel="noopener noreferrer">CVE-2022-22970</a>: Denial of service in Spring Framework</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: &lt;= 5.2.21.RELEASE) (declared at pom.xml)<br/>    Fix: Upgrade to 5.2.22.RELEASE<br/>  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: &gt;= 5.3.0, &lt; 5.3.20) (declared at pom.xml)<br/>    Fix: Upgrade to 5.3.20</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-36', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-36">&#x276F;</button> CVE-2022-22968: Improper handling of case sensitivity in Spring Framework</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-36" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-g5mm-vmx4-3rg7" target="_blank" rel="noopener noreferrer">CVE-2022-22968</a>: Improper handling of case sensitivity in Spring Framework</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-context:4.3.13.RELEASE (vulnerable range: &gt;= 5.3.0, &lt; 5.3.19) (declared at pom.xml)<br/>    Fix: Upgrade to 5.3.19<br/>  - org.springframework:spring-context:4.3.13.RELEASE (vulnerable range: &lt; 5.2.21.RELEASE) (declared at pom.xml)<br/>    Fix: Upgrade to 5.2.21.RELEASE</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-37', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-37">&#x276F;</button> CVE-2022-22965: Remote Code Execution in Spring Framework</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-37" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            <tr><td><span class="file-path" title="pom.xml:74">pom.xml:74</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-36p3-wjmg-h94x" target="_blank" rel="noopener noreferrer">CVE-2022-22965</a>: Remote Code Execution in Spring Framework</p><p>Severity: CRITICAL</p><p>Affected dependencies:<br/>  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: &gt;= 5.3.0, &lt; 5.3.18) (declared at pom.xml)<br/>    Fix: Upgrade to 5.3.18<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &gt;= 5.3.0, &lt; 5.3.18) (declared at pom.xml)<br/>    Fix: Upgrade to 5.3.18<br/>  - org.springframework.boot:spring-boot-starter-web:1.5.9.RELEASE (vulnerable range: &lt; 2.5.12) (declared at pom.xml:74)<br/>    Fix: Upgrade to 2.5.12<br/>  - org.springframework.boot:spring-boot-starter-web:1.5.9.RELEASE (vulnerable range: &gt;= 2.6.0, &lt; 2.6.6) (declared at pom.xml:74)<br/>    Fix: Upgrade to 2.6.6<br/>  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: &lt; 5.2.20.RELEASE) (declared at pom.xml)<br/>    Fix: Upgrade to 5.2.20.RELEASE<br/>  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: &lt; 5.2.20.RELEASE) (declared at pom.xml)<br/>    Fix: Upgrade to 5.2.20.RELEASE</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-38', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-38">&#x276F;</button> CVE-2020-36518: Deeply nested json in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-38" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-57j2-w4cx-62h2" target="_blank" rel="noopener noreferrer">CVE-2020-36518</a>: Deeply nested json in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.13.0, &lt;= 2.13.2.0) (declared at pom.xml)<br/>    Fix: Upgrade to 2.13.2.1<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &lt;= 2.12.6.0) (declared at pom.xml)<br/>    Fix: Upgrade to 2.12.6.1</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-39', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-39">&#x276F;</button> CVE-2020-11996: Uncontrolled Resource Consumption in Apache Tomcat</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-39" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-53hp-jpwq-2jgq" target="_blank" rel="noopener noreferrer">CVE-2020-11996</a>: Uncontrolled Resource Consumption in Apache Tomcat</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 10.0.0-M1, &lt;= 10.0.0-M4) (declared at pom.xml)<br/>    Fix: Upgrade to 10.0.0-M5<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 9.0.0.M1, &lt; 9.0.35) (declared at pom.xml)<br/>    Fix: Upgrade to 9.0.35<br/>  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: &gt;= 8.5.0, &lt; 8.5.55) (declared at pom.xml)<br/>    Fix: Upgrade to 8.5.55</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-40', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-40">&#x276F;</button> CVE-2020-36189: Unsafe Deserialization in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-40" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-vfqx-33qm-g869" target="_blank" rel="noopener noreferrer">CVE-2020-36189</a>: Unsafe Deserialization in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.7.0, &lt; 2.9.10.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.8<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &lt; 2.6.7.5) (declared at pom.xml)<br/>    Fix: Upgrade to 2.6.7.5</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-41', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-41">&#x276F;</button> CVE-2020-36187: Unsafe Deserialization in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-41" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-r695-7vr9-jgc2" target="_blank" rel="noopener noreferrer">CVE-2020-36187</a>: Unsafe Deserialization in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.0.0, &lt; 2.9.10.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.8</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-42', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-42">&#x276F;</button> CVE-2020-36188: Unsafe Deserialization in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-42" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-f9xh-2qgp-cq57" target="_blank" rel="noopener noreferrer">CVE-2020-36188</a>: Unsafe Deserialization in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.7.0, &lt; 2.9.10.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.8<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.0.0, &lt; 2.6.7.5) (declared at pom.xml)<br/>    Fix: Upgrade to 2.6.7.5</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-43', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-43">&#x276F;</button> CVE-2020-36183: Unsafe Deserialization in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-43" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-9m6f-7xcq-8vf8" target="_blank" rel="noopener noreferrer">CVE-2020-36183</a>: Unsafe Deserialization in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.7.00, &lt; 2.9.10.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.8<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.0.0, &lt; 2.6.7.5) (declared at pom.xml)<br/>    Fix: Upgrade to 2.6.7.5</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-44', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-44">&#x276F;</button> CVE-2020-36184: Unsafe Deserialization in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-44" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-m6x4-97wx-4q27" target="_blank" rel="noopener noreferrer">CVE-2020-36184</a>: Unsafe Deserialization in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.0.0, &lt; 2.9.10.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.8</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-45', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-45">&#x276F;</button> CVE-2020-36180: Unsafe Deserialization in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-45" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-8c4j-34r4-xr8g" target="_blank" rel="noopener noreferrer">CVE-2020-36180</a>: Unsafe Deserialization in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.7.0, &lt; 2.9.10.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.8<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.0.0, &lt; 2.6.7.5) (declared at pom.xml)<br/>    Fix: Upgrade to 2.6.7.5</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-46', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-46">&#x276F;</button> CVE-2020-36181: Unsafe Deserialization in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-46" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-cvm9-fjm9-3572" target="_blank" rel="noopener noreferrer">CVE-2020-36181</a>: Unsafe Deserialization in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.7.0, &lt; 2.9.10.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.8<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.0.0, &lt; 2.6.7.5) (declared at pom.xml)<br/>    Fix: Upgrade to 2.6.7.5</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-47', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-47">&#x276F;</button> CVE-2020-36185: Unsafe Deserialization in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-47" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-8w26-6f25-cm9x" target="_blank" rel="noopener noreferrer">CVE-2020-36185</a>: Unsafe Deserialization in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.0.0, &lt; 2.9.10.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.8</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-48', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-48">&#x276F;</button> CVE-2020-36179: Unsafe Deserialization in jackson-databind</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-48" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-9gph-22xh-8x98" target="_blank" rel="noopener noreferrer">CVE-2020-36179</a>: Unsafe Deserialization in jackson-databind</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.7.0, &lt; 2.9.10.8) (declared at pom.xml)<br/>    Fix: Upgrade to 2.9.10.8<br/>  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: &gt;= 2.0.0, &lt; 2.6.7.5) (declared at pom.xml)<br/>    Fix: Upgrade to 2.6.7.5</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-49', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-49">&#x276F;</button> CVE-2023-5072: Java: DoS Vulnerability in JSON-JAVA</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-49" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml:96">pom.xml:96</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-4jq9-2xhw-jpx7" target="_blank" rel="noopener noreferrer">CVE-2023-5072</a>: Java: DoS Vulnerability in JSON-JAVA</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.json:json:20171018 (vulnerable range: &lt;= 20230618) (declared at pom.xml:96)<br/>    Fix: Upgrade to 20231013</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-50', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-50">&#x276F;</button> CVE-2022-45688: json stack overflow vulnerability</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-50" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml:96">pom.xml:96</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-3vqj-43w4-2q58" target="_blank" rel="noopener noreferrer">CVE-2022-45688</a>: json stack overflow vulnerability</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.json:json:20171018 (vulnerable range: &lt; 20230227) (declared at pom.xml:96)<br/>    Fix: Upgrade to 20230227</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-51', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-51">&#x276F;</button> CVE-2017-5929: QOS.ch Logback vulnerable to Deserialization of Untrusted Data</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-51" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-vmfg-rjjm-rjrj" target="_blank" rel="noopener noreferrer">CVE-2017-5929</a>: QOS.ch Logback vulnerable to Deserialization of Untrusted Data</p><p>Severity: CRITICAL</p><p>Affected dependencies:<br/>  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: &lt; 1.2.0) (declared at pom.xml)<br/>    Fix: Upgrade to 1.2.0<br/>  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: &lt; 1.2.0) (declared at pom.xml)<br/>    Fix: Upgrade to 1.2.0</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-52', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-52">&#x276F;</button> CVE-2017-18640: SnakeYAML Entity Expansion during load operation</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-52" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-rvwf-54qp-4r6v" target="_blank" rel="noopener noreferrer">CVE-2017-18640</a>: SnakeYAML Entity Expansion during load operation</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.yaml:snakeyaml:1.17 (vulnerable range: &lt; 1.26) (declared at pom.xml)<br/>    Fix: Upgrade to 1.26</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-53', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-53">&#x276F;</button> CVE-2018-15756: Denial of Service in Spring Framework</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-53" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-ffvq-7w96-97p7" target="_blank" rel="noopener noreferrer">CVE-2018-15756</a>: Denial of Service in Spring Framework</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: &gt;= 5.1.0.RELEASE, &lt; 5.1.1.RELEASE) (declared at pom.xml)<br/>    Fix: Upgrade to 5.1.1.RELEASE<br/>  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: &gt;= 5.0.0.RELEASE, &lt; 5.0.10.RELEASE) (declared at pom.xml)<br/>    Fix: Upgrade to 5.0.10.RELEASE<br/>  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: &gt;= 4.2.0.RELEASE, &lt; 4.3.20.RELEASE) (declared at pom.xml)<br/>    Fix: Upgrade to 4.3.20.RELEASE</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="mandatory" onclick="toggleRow('row-security-54', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-54">&#x276F;</button> CVE-2018-1272: Possible privilege escalation in org.springframework:spring-core</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-mandatory"></span>Mandatory</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-54" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="pom.xml">pom.xml</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p><a href="https://github.com/advisories/GHSA-4487-x383-qpph" target="_blank" rel="noopener noreferrer">CVE-2018-1272</a>: Possible privilege escalation in org.springframework:spring-core</p><p>Severity: HIGH</p><p>Affected dependencies:<br/>  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: &lt; 4.3.15) (declared at pom.xml)<br/>    Fix: Upgrade to 4.3.15<br/>  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: &gt;= 5.0.0, &lt; 5.0.5) (declared at pom.xml)<br/>    Fix: Upgrade to 5.0.5</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="potential" onclick="toggleRow('row-security-55', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-55">&#x276F;</button> CWE-772: Missing Release of Resource after Effective Lifetime</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-potential"></span>Potential</span></td>
+      <td class="sp-cell">3</td>
+    </tr>
+    <tr class="detail-row" id="row-security-55" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="src/main/java/edu/wisc/my/messages/data/MessagesFromTextFile.java">src/main/java/edu/wisc/my/messages/data/MessagesFromTextFile.java</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p>The product does not release a resource after its effective lifetime has ended, i.e., after the resource is no longer needed.</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="potential" onclick="toggleRow('row-security-56', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-56">&#x276F;</button> CWE-775: Missing Release of File Descriptor or Handle after Effective Lifetime</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-potential"></span>Potential</span></td>
+      <td class="sp-cell">3</td>
+    </tr>
+    <tr class="detail-row" id="row-security-56" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="src/main/java/edu/wisc/my/messages/data/MessagesFromTextFile.java">src/main/java/edu/wisc/my/messages/data/MessagesFromTextFile.java</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p>The product does not release a file descriptor or handle after its effective lifetime has ended, i.e., after the file descriptor/handle is no longer needed.</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="potential" onclick="toggleRow('row-security-57', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-57">&#x276F;</button> CWE-778: Insufficient Logging</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-potential"></span>Potential</span></td>
+      <td class="sp-cell">3</td>
+    </tr>
+    <tr class="detail-row" id="row-security-57" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="src/main/java/edu/wisc/my/messages/controller/MessagesController.java">src/main/java/edu/wisc/my/messages/controller/MessagesController.java</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p>When a security-critical event occurs, the product either does not record the event or omits important details about the event when logging it.</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="issue-row" data-criticality="optional" onclick="toggleRow('row-security-58', this)" style="cursor:pointer;">
+      <td style="white-space:normal;"><div class="issue-title-cell"><button class="expand-btn" id="btn-row-security-58">&#x276F;</button> CWE-477: Use of Obsolete Function</div></td>
+      <td class="crit-cell"><span class="crit-label"><span class="crit-square crit-square-optional"></span>Optional</span></td>
+      <td class="sp-cell">1</td>
+    </tr>
+    <tr class="detail-row" id="row-security-58" style="display:none;">
+      <td colspan="3">
+        <div class="detail-content">
+          <div class="file-list">
+            <table><thead><tr><th>File</th></tr></thead><tbody>
+            <tr><td><span class="file-path" title="src/main/java/edu/wisc/my/messages/model/Message.java">src/main/java/edu/wisc/my/messages/model/Message.java</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="explanation-panel">
+            <h4>Explanation</h4>
+            <div><p>The code uses deprecated or obsolete functions, which suggests that the code has not been actively reviewed or maintained.</p></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</div><!-- #tab-issues -->
+<div id="tab-arch" class="tab-panel">
+  <div class="fact-content"><h1 id="architecture-diagram">Architecture Diagram</h1>
+<p>This document describes the architecture of the uPortal Messaging microservice, a Spring Boot REST API that serves filtered messages to portal users based on group membership and message scheduling rules.</p>
+<h2 id="application-architecture">Application Architecture</h2>
+<div class="mermaid">
+flowchart TD
+    subgraph Client["Client Layer"]
+        Portal["uPortal / Web Browser"]
+    end
+    subgraph App["Application Layer - Spring Boot 1.5.9"]
+        Web["Spring MVC REST Controllers"]
+        Service["Business Services"]
+        HeaderParser["IsMemberOf Header Parser"]
+    end
+    subgraph Data["Data Layer"]
+        Repo["MessagesFromTextFile Repository"]
+        JsonFile[("messages.json / classpath file")]
+    end
+
+    Portal -->|"HTTP GET /messages"| Web
+    Portal -->|"isMemberOf header"| Web
+    Web -->|"delegates"| Service
+    Web -->|"parses groups"| HeaderParser
+    HeaderParser -->|"returns Set of groups"| Web
+    Service -->|"loads all messages"| Repo
+    Repo -->|"reads JSON"| JsonFile
+</div>
+<h3 id="technology-stack-summary">Technology Stack Summary</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th>
+</tr></thead><tbody>
+<tr><td>Presentation</td><td>Spring MVC REST</td><td>1.5.9</td><td>RESTful HTTP endpoints</td></tr>
+<tr><td>Business Logic</td><td>Spring Boot Service</td><td>1.5.9</td><td>Message filtering, predicates</td></tr>
+<tr><td>Data Access</td><td>Spring Repository</td><td>1.5.9</td><td>JSON file loading via ResourceLoader</td></tr>
+<tr><td>Runtime</td><td>Embedded Tomcat (WAR)</td><td>8.x</td><td>Servlet container</td></tr>
+<tr><td>Serialization</td><td>Jackson ObjectMapper</td><td>2.x</td><td>JSON deserialization</td></tr>
+<tr><td>Utilities</td><td>Apache Commons IO / Lang3</td><td>2.6 / 3.7</td><td>IO and string utilities</td></tr>
+<tr><td>Build</td><td>Maven</td><td>3.x</td><td>Dependency management, WAR packaging</td></tr>
+</tbody></table></div>
+<h3 id="data-storage-external-services">Data Storage & External Services</h3>
+<p>The application has no relational database or external service dependencies. All message data is stored in a static <code>messages.json</code> file deployed on the classpath, configured via the <code>message.source</code> property in <code>application.properties</code>. There is no cache, message broker, or external API integration. The only external input per request is the <code>isMemberOf</code> HTTP header that carries the requesting user's group memberships.</p>
+<h3 id="key-architectural-decisions">Key Architectural Decisions</h3>
+<ul>
+<li><strong>Flat-file data source</strong>: Messages are loaded from a JSON file on every request via <code>MessagesFromTextFile</code>, making the data layer trivially simple but requiring redeployment to update message content.</li>
+<li><strong>Predicate-based filtering</strong>: Message visibility rules (audience, expiry, not-before) are implemented as composable <code>java.util.function.Predicate<Message></code> objects, enabling flexible composition without complex query logic.</li>
+<li><strong>WAR packaging for container deployment</strong>: Despite being a Spring Boot application, the project is packaged as a WAR for deployment into an external Tomcat container (typical for uPortal environments).</li>
+</ul>
+<h2 id="component-relationships">Component Relationships</h2>
+<div class="mermaid">
+flowchart LR
+    subgraph Presentation["Presentation Layer"]
+        MessagesCtrl["MessagesController"]
+        HeaderParser["IsMemberOfHeaderParser"]
+    end
+    subgraph Business["Business Logic"]
+        MessagesService["MessagesService"]
+        AudienceFilter["AudienceFilterMessagePredicate"]
+        ExpiredPred["ExpiredMessagePredicate"]
+        GoneLivePred["GoneLiveMessagePredicate"]
+        MessageIdPred["MessageIdPredicate"]
+    end
+    subgraph DataAccess["Data Access"]
+        MessagesRepo["MessagesFromTextFile"]
+    end
+    subgraph Model["Model"]
+        Message["Message"]
+        User["User"]
+        MessageArray["MessageArray"]
+    end
+
+    MessagesCtrl -->|"delegates filtering"| MessagesService
+    MessagesCtrl -->|"parses header"| HeaderParser
+    MessagesService -->|"loads messages"| MessagesRepo
+    MessagesService -->|"applies"| AudienceFilter
+    MessagesService -->|"applies"| ExpiredPred
+    MessagesService -->|"applies"| GoneLivePred
+    MessagesService -->|"applies"| MessageIdPred
+    MessagesRepo -->|"returns"| MessageArray
+    MessageArray -->|"contains"| Message
+    AudienceFilter -->|"evaluates"| User
+</div>
+<h3 id="component-inventory">Component Inventory</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Component</th><th>Layer</th><th>Type</th><th>Responsibility</th>
+</tr></thead><tbody>
+<tr><td>MessagesController</td><td>Presentation</td><td>Spring REST Controller</td><td>Handles HTTP endpoints: /messages, /admin/allMessages, /message/{id}, /admin/message/{id}</td></tr>
+<tr><td>IsMemberOfHeaderParser</td><td>Presentation</td><td>Spring Component</td><td>Parses semicolon-delimited isMemberOf header into a Set of group strings</td></tr>
+<tr><td>MessagesService</td><td>Business Logic</td><td>Spring Service</td><td>Orchestrates message retrieval and applies predicate-based filtering rules</td></tr>
+<tr><td>AudienceFilterMessagePredicate</td><td>Business Logic</td><td>Predicate</td><td>Filters messages to those whose audience includes the requesting user's groups</td></tr>
+<tr><td>ExpiredMessagePredicate</td><td>Business Logic</td><td>Predicate</td><td>Filters out messages past their not-after date</td></tr>
+<tr><td>GoneLiveMessagePredicate</td><td>Business Logic</td><td>Predicate</td><td>Filters out messages before their not-before date</td></tr>
+<tr><td>MessageIdPredicate</td><td>Business Logic</td><td>Predicate</td><td>Matches a message by its unique ID</td></tr>
+<tr><td>MessagesFromTextFile</td><td>Data Access</td><td>Spring Repository</td><td>Loads and deserializes the messages JSON file from the classpath</td></tr>
+<tr><td>Message</td><td>Model</td><td>POJO</td><td>Represents a single portal message with metadata and content</td></tr>
+<tr><td>User</td><td>Model</td><td>POJO</td><td>Represents the requesting user with their group memberships</td></tr>
+<tr><td>MessageArray</td><td>Model</td><td>POJO</td><td>Wrapper for deserializing the JSON messages array</td></tr>
+<tr><td>MessageFilter</td><td>Model</td><td>POJO</td><td>Encapsulates filter criteria</td></tr>
+<tr><td>ActionButton</td><td>Model</td><td>POJO</td><td>Represents an action button on a message</td></tr>
+<tr><td>Data</td><td>Model</td><td>POJO</td><td>Represents additional data payload on a message</td></tr>
+</tbody></table></div></div>
+</div>
+<div id="tab-api" class="tab-panel">
+  <div class="fact-content"><h1 id="api-service-communication-contracts">API & Service Communication Contracts</h1>
+<p>The uPortal Messaging application exposes 5 REST endpoints across a single Spring MVC controller, communicating synchronously with no external service dependencies.</p>
+<h2 id="service-catalog">Service Catalog</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Service</th><th>Port</th><th>Category</th><th>Purpose</th>
+</tr></thead><tbody>
+<tr><td>uportal-messaging</td><td>8080 (default)</td><td>Business</td><td>Serves portal messages filtered by user group membership and scheduling rules</td></tr>
+</tbody></table></div>
+<h2 id="api-endpoints-inventory">API Endpoints Inventory</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Service</th><th>Method</th><th>Path</th><th>Request Type</th><th>Response Type</th>
+</tr></thead><tbody>
+<tr><td>MessagesController</td><td>GET</td><td>/</td><td>None</td><td>Map (status: "up")</td></tr>
+<tr><td>MessagesController</td><td>GET</td><td>/messages</td><td>isMemberOf header (String)</td><td>Map (messages: List of Message)</td></tr>
+<tr><td>MessagesController</td><td>GET</td><td>/admin/allMessages</td><td>None</td><td>Map (messages: List of Message)</td></tr>
+<tr><td>MessagesController</td><td>GET</td><td>/admin/message/{id}</td><td>Path param: id (String)</td><td>Message or 404</td></tr>
+<tr><td>MessagesController</td><td>GET</td><td>/message/{id}</td><td>Path param: id (String), isMemberOf header</td><td>Message or 404 / 4xx</td></tr>
+</tbody></table></div>
+<h2 id="management-observability-endpoints">Management & Observability Endpoints</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Service</th><th>Endpoint</th><th>Custom Metrics</th>
+</tr></thead><tbody>
+<tr><td>uportal-messaging</td><td>Spring Boot Actuator defaults (if enabled)</td><td>None</td></tr>
+</tbody></table></div>
+<p>> Note: No explicit Spring Boot Actuator configuration was found in <code>application.properties</code>. Default Actuator endpoints may be available but are not explicitly configured. No custom <code>@Timed</code> or Micrometer metric registrations were detected.</p>
+<h2 id="dtos-contracts">DTOs & Contracts</h2>
+<p>The API uses plain Java POJOs serialized to JSON via Jackson (provided by Spring Boot):</p>
+<ul>
+<li><strong>Message</strong>: Primary response entity representing a single portal message. Returned directly from <code>/message/{id}</code> and as list elements in <code>/messages</code> and <code>/admin/allMessages</code> responses.</li>
+<li><strong>MessageArray</strong>: Internal deserialization wrapper used when loading messages from the JSON file. Not exposed in API responses directly.</li>
+<li><strong>MessageFilter</strong>: Encapsulates filtering parameters; used internally within the service layer and not exposed at the API boundary.</li>
+<li><strong>ActionButton</strong>: Nested within <code>Message</code>; represents an action link/button on a message.</li>
+<li><strong>Data</strong>: Nested within <code>Message</code>; carries additional key-value data associated with a message.</li>
+<li><strong>User</strong>: Internal model representing the requesting user and their group memberships. Constructed per-request from the <code>isMemberOf</code> header; never serialized in API responses.</li>
+</ul>
+<p>There are no OpenAPI/Swagger specifications, <code>.proto</code> files, or GraphQL schemas. No DTO immutability annotations (Lombok <code>@Value</code>, Java records) are used — all model classes are mutable POJOs. Jackson uses default serialization with no custom serializers configured.</p>
+<h2 id="communication-patterns">Communication Patterns</h2>
+<p><strong>Synchronous</strong>: All communication is synchronous HTTP REST. The application has no client-side HTTP calls to other services — it is entirely a server-side service with no outbound REST, gRPC, or messaging calls.</p>
+<p><strong>Asynchronous</strong>: No asynchronous messaging patterns (Kafka, RabbitMQ, JMS, etc.) are present.</p>
+<p><strong>Resilience</strong>: No circuit breaker, retry policy, timeout configuration, or bulkhead patterns are implemented. There is no Resilience4j, Spring Retry, or similar library on the classpath.</p>
+<p><strong>Service Discovery</strong>: Not applicable. The application is a standalone WAR deployed to Tomcat. There is no Eureka, Consul, or Kubernetes-based service discovery.</p>
+<p><strong>API Gateway</strong>: No API gateway layer exists within this project.</p>
+<p><strong>Security Posture</strong>: No authentication or TLS is configured at the application level. All endpoints are publicly accessible with no authorization checks enforced by the application itself. The <code>/admin/allMessages</code> and <code>/admin/message/{id}</code> endpoints are prefixed with <code>/admin</code> but have no access control — they rely entirely on external infrastructure (reverse proxy, load balancer, or container network policy) to restrict access. The <code>isMemberOf</code> HTTP header is trusted implicitly without validation or signature verification; any caller can forge group memberships.</p>
+<h2 id="service-technology-matrix">Service Technology Matrix</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Service</th><th>Web Framework</th><th>Data Access</th><th>Discovery</th><th>Gateway</th><th>Actuator</th><th>Cache</th><th>Metrics</th>
+</tr></thead><tbody>
+<tr><td>uportal-messaging</td><td>Spring MVC (Servlet)</td><td>JSON file via ResourceLoader</td><td>None</td><td>None</td><td>Default (unconfigured)</td><td>None</td><td>None</td></tr>
+</tbody></table></div>
+<h2 id="service-communication-sequence">Service Communication Sequence</h2>
+<div class="mermaid">
+sequenceDiagram
+    participant Client as "Portal Client"
+    participant Ctrl as "MessagesController"
+    participant Parser as "IsMemberOfHeaderParser"
+    participant Svc as "MessagesService"
+    participant Repo as "MessagesFromTextFile"
+    participant File as "messages.json"
+
+    Client->>Ctrl: GET /messages (isMemberOf: group1;group2)
+    Ctrl->>Parser: groupsFromHeaderValue("group1;group2")
+    Parser-->>Ctrl: Set[group1, group2]
+    Ctrl->>Svc: filteredMessages(user)
+    Svc->>Repo: allMessages()
+    Repo->>File: read JSON classpath resource
+    File-->>Repo: raw JSON string
+    Repo-->>Svc: List of Message
+    Svc->>Svc: apply ExpiredMessagePredicate
+    Svc->>Svc: apply GoneLiveMessagePredicate
+    Svc->>Svc: apply AudienceFilterMessagePredicate
+    Svc-->>Ctrl: List of filtered Message
+    Ctrl-->>Client: 200 { "messages": [...] }
+</div></div>
+</div>
+<div id="tab-config" class="tab-panel">
+  <div class="fact-content"><h1 id="configuration-externalized-settings-inventory">Configuration & Externalized Settings Inventory</h1>
+<p>The uPortal Messaging application has a minimal configuration landscape: a single <code>application.properties</code> with one custom property, a <code>logback.xml</code> for logging, and no runtime profiles, secret stores, or external config servers.</p>
+<h2 id="configuration-sources">Configuration Sources</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Source</th><th>Type</th><th>Path/Location</th><th>Notes</th>
+</tr></thead><tbody>
+<tr><td>application.properties</td><td>Spring Boot properties</td><td><code>src/main/resources/application.properties</code></td><td>Single custom property defining the message source file path</td></tr>
+<tr><td>logback.xml</td><td>Logback XML config</td><td><code>src/main/resources/logback.xml</code></td><td>Rolling file appender; includes Spring Boot base logging config</td></tr>
+<tr><td>messages.json</td><td>Data file</td><td><code>src/main/resources/messages.json</code></td><td>Static message data; path controlled by <code>message.source</code> property</td></tr>
+<tr><td>demoMessages.json</td><td>Data file</td><td><code>src/main/resources/demoMessages.json</code></td><td>Alternative demo data file; not wired by default</td></tr>
+<tr><td>banner.txt</td><td>Spring Boot banner</td><td><code>src/main/resources/banner.txt</code></td><td>Custom ASCII banner displayed on startup</td></tr>
+</tbody></table></div>
+<p>No Spring Cloud Config server, external Git config repository, Vault, Azure KeyVault, AWS Secrets Manager, Kubernetes ConfigMaps/Secrets, or Docker Compose environment sections are present.</p>
+<h2 id="build-profiles">Build Profiles</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Profile</th><th>Activation</th><th>Purpose</th><th>Key Dependencies/Plugins</th>
+</tr></thead><tbody>
+<tr><td>(default)</td><td>Automatic</td><td>Standard WAR build</td><td>spring-boot-maven-plugin, maven-failsafe-plugin, maven-war-plugin, coveralls-maven-plugin, cobertura-maven-plugin</td></tr>
+<tr><td>release</td><td>Manual <code>-PreleaseProfiles</code> via maven-release-plugin</td><td>Deployment to artifact repository</td><td>maven-release-plugin 2.4.2, maven-scm-provider-gitexe 1.8.1</td></tr>
+</tbody></table></div>
+<p>No <code>dev</code>, <code>docker</code>, or <code>cloud</code> Maven profiles are defined. The <code>maven-release-plugin</code> is configured to use the <code>release</code> profile during releases and deploy to the artifact repositories defined in <code><distributionManagement></code>.</p>
+<h2 id="runtime-profiles">Runtime Profiles</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Profile</th><th>Activation Method</th><th>Config Files</th><th>Key Overrides</th>
+</tr></thead><tbody>
+<tr><td>(default/no profile)</td><td>None — single profile only</td><td><code>application.properties</code></td><td>N/A</td></tr>
+</tbody></table></div>
+<p>No Spring profile-specific configuration files (<code>application-dev.properties</code>, <code>application-prod.yml</code>, etc.) exist. There are no <code>@Profile</code> annotations in the codebase. The application is intended to run with a single configuration, with any environment-specific overrides expected to be supplied externally (e.g., via JVM <code>-D</code> system property for <code>message.source</code>).</p>
+<h2 id="properties-inventory">Properties Inventory</h2>
+<h3 id="uportal-messaging">uportal-messaging</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Property Key</th><th>Default Value</th><th>Profiles</th><th>Source</th>
+</tr></thead><tbody>
+<tr><td><code>message.source</code></td><td><code>classpath:messages.json</code></td><td>All</td><td><code>application.properties</code></td></tr>
+</tbody></table></div>
+<p>No database, security, caching, or messaging properties are present. The only application-specific property is the data file path. Spring Boot's autoconfigured defaults (server port 8080, context path <code>/</code>, etc.) apply implicitly.</p>
+<h3 id="logging-configuration-logback-xml">Logging Configuration (logback.xml)</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Setting</th><th>Value</th>
+</tr></thead><tbody>
+<tr><td>Log directory</td><td><code>./logs/${CONTEXT_NAME}</code> (relative to working directory)</td></tr>
+<tr><td>Log file name</td><td><code>uportal-messaging.log</code></td></tr>
+<tr><td>Rolling policy</td><td>Daily rotation: <code>uportal-messaging.log.yyyy-MM-dd</code></td></tr>
+<tr><td>Root log level</td><td><code>WARN</code></td></tr>
+<tr><td><code>edu.wisc</code> package level</td><td><code>WARN</code></td></tr>
+<tr><td>Scan for changes</td><td>Every 30 seconds</td></tr>
+</tbody></table></div>
+<h2 id="startup-parameters-resource-requirements">Startup Parameters & Resource Requirements</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Service</th><th>JVM/Runtime Options</th><th>Memory</th><th>Instance Count</th>
+</tr></thead><tbody>
+<tr><td>uportal-messaging</td><td>No defined JVM options; defaults apply</td><td>Not specified (no Docker/K8s config)</td><td>Not specified</td></tr>
+</tbody></table></div>
+<p>No Docker Compose, Kubernetes manifests, Helm charts, or container configuration files are present. JVM heap size, GC settings, and instance count are left to the deploying environment.</p>
+<h2 id="startup-dependency-chain">Startup Dependency Chain</h2>
+<p>The application has no startup dependencies. It is a standalone Spring Boot WAR with no dependency on external services, config servers, or databases. Startup succeeds as long as the <code>message.source</code> classpath resource is accessible, which is guaranteed since <code>messages.json</code> is bundled in the WAR.</p>
+<p>There are no Kubernetes readiness probes, <code>dockerize</code> wait mechanisms, or Spring Cloud Config retry configurations.</p>
+<h2 id="secrets-sensitive-configuration">Secrets & Sensitive Configuration</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Secret Reference</th><th>Type</th><th>Storage</th>
+</tr></thead><tbody>
+<tr><td>(none detected)</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+<p>No database passwords, API keys, OAuth client secrets, or any other sensitive configuration values are present. The application does not connect to any external authenticated service and has no credentials to manage.</p>
+<h3 id="secrets-provisioning-workflow">Secrets Provisioning Workflow</h3>
+<p>No secrets provisioning workflow exists. The application has no secrets. The sole configuration property (<code>message.source</code>) is non-sensitive.</p>
+<h2 id="feature-flags">Feature Flags</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Flag Name</th><th>Default</th><th>Controlled By</th>
+</tr></thead><tbody>
+<tr><td>(none detected)</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+<p>No feature flag frameworks (LaunchDarkly, Unleash, Spring Feature Management), <code>@ConditionalOnProperty</code> beans, or A/B testing configurations are present in the codebase.</p>
+<h2 id="framework-runtime-versions">Framework & Runtime Versions</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Component</th><th>Version</th><th>Source</th>
+</tr></thead><tbody>
+<tr><td>Java (target/source)</td><td>1.8</td><td><code>pom.xml</code> <code><java.version></code></td></tr>
+<tr><td>Spring Boot</td><td>1.5.9.RELEASE</td><td><code>pom.xml</code> parent POM</td></tr>
+<tr><td>Spring Framework</td><td>4.3.x (managed by Boot 1.5.9)</td><td>Transitive via spring-boot-starter-parent</td></tr>
+<tr><td>Spring MVC</td><td>4.3.x</td><td>Transitive via spring-boot-starter-web</td></tr>
+<tr><td>Spring Data REST / HATEOAS</td><td>2.6.x</td><td>Transitive via spring-boot-starter-data-rest</td></tr>
+<tr><td>Embedded Tomcat</td><td>8.5.x (provided scope — external)</td><td>spring-boot-starter-tomcat</td></tr>
+<tr><td>Jackson</td><td>2.9.x (managed by Boot 1.5.9)</td><td>Transitive via spring-boot-starter-web</td></tr>
+<tr><td>SLF4J</td><td>1.7.x</td><td>Transitive via spring-boot-starter</td></tr>
+<tr><td>Logback</td><td>1.1.x</td><td>Transitive via spring-boot-starter; overridden by logback.xml</td></tr>
+<tr><td>Apache Commons IO</td><td>2.6</td><td><code>pom.xml</code> explicit</td></tr>
+<tr><td>Apache Commons Lang3</td><td>3.7</td><td><code>pom.xml</code> explicit</td></tr>
+<tr><td>org.json</td><td>20171018</td><td><code>pom.xml</code> explicit</td></tr>
+<tr><td>Maven</td><td>3.x (minimum; not pinned)</td><td>Build tool</td></tr>
+<tr><td>maven-failsafe-plugin</td><td>Managed by Spring Boot parent</td><td>Integration test execution</td></tr>
+<tr><td>maven-release-plugin</td><td>2.4.2</td><td><code>pom.xml</code> explicit</td></tr>
+<tr><td>coveralls-maven-plugin</td><td>4.3.0</td><td><code>pom.xml</code> explicit</td></tr>
+<tr><td>cobertura-maven-plugin</td><td>2.7</td><td><code>pom.xml</code> explicit</td></tr>
+</tbody></table></div></div>
+</div>
+<div id="tab-workflows" class="tab-panel">
+  <div class="fact-content"><h1 id="core-business-workflows">Core Business Workflows</h1>
+<p>The uPortal Messaging application serves targeted portal messages to authenticated users based on their group memberships and each message's scheduling window, enabling portal administrators to deliver time-bound, audience-specific announcements and notifications.</p>
+<h2 id="domain-entities">Domain Entities</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Entity</th><th>Service / Bounded Context</th><th>Description</th><th>Key Relationships</th>
+</tr></thead><tbody>
+<tr><td>Message</td><td>Message Delivery</td><td>A portal announcement or notification with content, scheduling, and audience metadata</td><td>Contains one optional MessageFilter, up to three optional ActionButtons, and optional Data</td></tr>
+<tr><td>MessageFilter</td><td>Message Delivery</td><td>Defines the audience and scheduling window for a message (groups, goLiveDate, expireDate)</td><td>Belongs to one Message; evaluated against a User</td></tr>
+<tr><td>ActionButton</td><td>Message Delivery</td><td>A labeled hyperlink button displayed on a message (action, moreInfo, confirm)</td><td>Belongs to one Message</td></tr>
+<tr><td>Data</td><td>Message Delivery</td><td>Optional key-value payload attached to a message for portal widget integration</td><td>Belongs to one Message</td></tr>
+<tr><td>User</td><td>Message Delivery</td><td>Transient per-request representation of the requesting user and their group memberships</td><td>Used by MessageFilter to evaluate audience eligibility</td></tr>
+</tbody></table></div>
+<h2 id="service-to-domain-mapping">Service-to-Domain Mapping</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Service</th><th>Domain Context</th><th>Owned Entities</th><th>External Dependencies</th>
+</tr></thead><tbody>
+<tr><td>uportal-messaging</td><td>Message Delivery</td><td>Message, MessageFilter, ActionButton, Data, User</td><td>None — all data is self-contained in a classpath JSON file</td></tr>
+</tbody></table></div>
+<p>This is a single-service application with a single bounded context. There are no cross-service data flows or inter-service dependencies.</p>
+<h2 id="primary-workflows">Primary Workflows</h2>
+<h3 id="workflow-1-retrieve-filtered-messages-for-a-portal-user">Workflow 1: Retrieve Filtered Messages for a Portal User</h3>
+<p><strong>Entry point:</strong> <code>GET /messages</code></p>
+<p><strong>Purpose:</strong> Return the list of messages that are currently applicable to the requesting user — excluding expired, premature, or audience-restricted messages the user is not eligible to receive.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>The portal client calls <code>GET /messages</code>, attaching the user's group memberships in the <code>isMemberOf</code> HTTP header (semicolon-delimited string).</li>
+<li><code>MessagesController</code> delegates header parsing to <code>IsMemberOfHeaderParser</code>, which splits the header value into a <code>Set<String></code> of group names.</li>
+<li>A <code>User</code> object is constructed with the parsed group set.</li>
+<li><code>MessagesService.filteredMessages(user)</code> is called, which loads all messages from the JSON file.</li>
+<li>Three predicates are composed and applied to filter the message list:</li>
+</ol>
+<ul>
+<li><strong>Expiry check</strong>: Messages whose <code>expireDate</code> is in the past are removed.</li>
+<li><strong>Go-live check</strong>: Messages whose <code>goLiveDate</code> is in the future are removed.</li>
+<li><strong>Audience check</strong>: Messages with a group filter that does not include any of the user's groups are removed.</li>
+</ul>
+<ol>
+<li>The surviving messages are returned as <code>{ "messages": [...] }</code>.</li>
+</ol>
+<p><strong>Business rules applied:</strong> BR-1 (expiry), BR-2 (go-live), BR-3 (audience).</p>
+<p>---</p>
+<h3 id="workflow-2-retrieve-a-specific-message-for-a-portal-user">Workflow 2: Retrieve a Specific Message for a Portal User</h3>
+<p><strong>Entry point:</strong> <code>GET /message/{id}</code></p>
+<p><strong>Purpose:</strong> Retrieve a specific message by ID, validated against the requesting user's context. Throws typed exceptions for scheduling or audience violations rather than silently excluding the message.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>The portal client calls <code>GET /message/{id}</code> with the user's <code>isMemberOf</code> header.</li>
+<li><code>MessagesController</code> parses the header into a <code>User</code> object (same as Workflow 1).</li>
+<li><code>MessagesService.messageByIdForUser(id, user)</code> is called.</li>
+<li><code>messageById(id)</code> is called first: all messages are loaded and filtered by ID. If no match, returns null → controller throws <code>MessageNotFoundException</code> (404).</li>
+<li>The matching message is tested sequentially:</li>
+</ol>
+<ul>
+<li>If <code>goLiveDate</code> is in the future → throws <code>PrematureMessageException</code>.</li>
+<li>If <code>expireDate</code> is in the past → throws <code>ExpiredMessageException</code>.</li>
+<li>If the user is not in the message's audience → throws <code>UserNotInMessageAudienceException</code>.</li>
+</ul>
+<ol>
+<li>If all checks pass, the message is returned.</li>
+</ol>
+<p><strong>Business rules applied:</strong> BR-2 (go-live), BR-1 (expiry), BR-3 (audience).</p>
+<p>---</p>
+<h3 id="workflow-3-retrieve-all-messages-admin">Workflow 3: Retrieve All Messages (Admin)</h3>
+<p><strong>Entry point:</strong> <code>GET /admin/allMessages</code></p>
+<p><strong>Purpose:</strong> Return the complete, unfiltered list of all messages regardless of scheduling or audience. Intended for portal administrators to inspect the full message inventory.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><code>MessagesController.allMessages()</code> calls <code>MessagesService.allMessages()</code>.</li>
+<li><code>MessagesFromTextFile.allMessages()</code> loads and deserializes the JSON file.</li>
+<li>All messages are returned without any filtering.</li>
+</ol>
+<p><strong>No business rules applied.</strong> This is an administrative bypass of all filtering logic.</p>
+<p>---</p>
+<h3 id="workflow-4-retrieve-a-specific-message-admin">Workflow 4: Retrieve a Specific Message (Admin)</h3>
+<p><strong>Entry point:</strong> <code>GET /admin/message/{id}</code></p>
+<p><strong>Purpose:</strong> Retrieve a specific message by ID with no user-context restrictions. Allows administrators to inspect any message including premature, expired, or audience-restricted ones.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><code>MessagesController.adminMessageById(id)</code> calls <code>MessagesService.messageById(id)</code>.</li>
+<li>All messages are loaded and the first match by ID is returned.</li>
+<li>If no match is found, <code>MessageNotFoundException</code> is thrown (404).</li>
+</ol>
+<p><strong>No scheduling or audience business rules applied.</strong></p>
+<h2 id="cross-service-data-flows">Cross-Service Data Flows</h2>
+<p>The application is a single-service deployment with no cross-service data flows. All data originates from the local <code>messages.json</code> classpath file. There is no gateway aggregation, inter-service REST calls, or event-driven data composition. The only external input per request is the <code>isMemberOf</code> HTTP header, which is provided by the upstream portal infrastructure (not another microservice owned by this application).</p>
+<h2 id="business-workflow-sequence">Business Workflow Sequence</h2>
+<div class="mermaid">
+sequenceDiagram
+    participant Client as "Portal Client"
+    participant Ctrl as "MessagesController"
+    participant Parser as "Header Parser"
+    participant Svc as "MessagesService"
+    participant Repo as "MessagesFromTextFile"
+
+    Client->>Ctrl: GET /messages (isMemberOf: groupA;groupB)
+    Ctrl->>Parser: Parse isMemberOf header
+    Parser-->>Ctrl: Set of group names
+    Ctrl->>Svc: filteredMessages(user)
+    Svc->>Repo: allMessages()
+    Repo-->>Svc: Full message list
+
+    loop For each message
+        Svc->>Svc: Check expiry (BR-1)
+        alt Message is expired
+            Note over Svc: Remove message
+        else Not expired
+            Svc->>Svc: Check go-live date (BR-2)
+            alt Message is premature
+                Note over Svc: Remove message
+            else Gone live
+                Svc->>Svc: Check audience (BR-3)
+                alt User not in audience
+                    Note over Svc: Remove message
+                else User in audience
+                    Note over Svc: Retain message
+                end
+            end
+        end
+    end
+
+    Svc-->>Ctrl: Filtered message list
+    Ctrl-->>Client: 200 { "messages": [...] }
+</div>
+<h2 id="business-rules-decision-logic">Business Rules & Decision Logic</h2>
+<h3 id="br-1-message-expiry">BR-1: Message Expiry</h3>
+<p>A message is expired if its <code>filter.expireDate</code> is a non-null ISO datetime string that is strictly before the current system time. Messages with no filter, a null <code>expireDate</code>, or an unparseable <code>expireDate</code> are treated as expired (fail-safe: bogus expiration data is treated as expired). Expired messages are silently excluded from filtered results; accessing an expired message by ID throws <code>ExpiredMessageException</code>.</p>
+<h3 id="br-2-message-go-live-not-before">BR-2: Message Go-Live (Not-Before)</h3>
+<p>A message is premature if its <code>filter.goLiveDate</code> is a non-null ISO datetime string that is strictly after the current system time. Messages with no filter, a null <code>goLiveDate</code>, or an unparseable <code>goLiveDate</code> are treated as having gone live (they are not premature). Premature messages are silently excluded from filtered results; accessing a premature message by ID throws <code>PrematureMessageException</code>.</p>
+<h3 id="br-3-audience-filtering">BR-3: Audience Filtering</h3>
+<p>A message is visible to a user if ANY of the following is true:</p>
+<ul>
+<li>The message has no <code>filter</code> field at all (universal audience).</li>
+<li>The message's <code>filter.groups</code> list is null (universal audience — no group constraint was specified).</li>
+<li>The intersection of <code>filter.groups</code> and the user's group memberships is non-empty (the user belongs to at least one required group).</li>
+</ul>
+<p>A message is NOT visible if <code>filter.groups</code> is an empty list (explicitly restricted to no one) or if none of the required groups match the user's groups.</p>
+<h3 id="br-4-message-id-uniqueness">BR-4: Message ID Uniqueness</h3>
+<p>Message IDs are expected to be unique. If <code>messageById</code> finds more than one message with the same ID, an <code>IllegalStateException</code> is thrown — this is treated as a data-corruption scenario.</p>
+<h3 id="error-handling">Error Handling</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Exception</th><th>Trigger</th><th>HTTP Outcome</th>
+</tr></thead><tbody>
+<tr><td><code>MessageNotFoundException</code></td><td>No message found for the given ID</td><td>404 Not Found</td></tr>
+<tr><td><code>ExpiredMessageException</code></td><td>Message exists but is past its expireDate</td><td>4xx (exception handler)</td></tr>
+<tr><td><code>PrematureMessageException</code></td><td>Message exists but has not yet gone live</td><td>4xx (exception handler)</td></tr>
+<tr><td><code>UserNotInMessageAudienceException</code></td><td>Message exists and is live but user lacks required group</td><td>4xx (exception handler)</td></tr>
+<tr><td><code>IllegalStateException</code></td><td>Multiple messages share the same ID</td><td>500 Internal Server Error</td></tr>
+</tbody></table></div>
+<h3 id="authorization">Authorization</h3>
+<p>There is no programmatic authorization. The <code>/admin/*</code> endpoints bypass all filtering but have no access control enforced by the application. Authorization for admin endpoints must be enforced by external infrastructure (reverse proxy, container network policy, or portal gateway).</p>
+<h3 id="transactions">Transactions</h3>
+<p>No transaction management is used. The application is read-only with no persistence writes, so there are no <code>@Transactional</code> boundaries, saga patterns, or consistency concerns.</p>
+<h3 id="audit-logging">Audit / Logging</h3>
+<p>SLF4J + Logback is used for operational logging. The service logs at <code>TRACE</code> level for each filtered message count and individual message lookups, and at <code>DEBUG</code> level when no matching message is found or when a message is excluded due to scheduling or audience rules. <code>ERROR</code> level is used for data-corruption scenarios (duplicate IDs).</p></div>
+</div>
+<div id="tab-deps" class="tab-panel">
+  <div class="fact-content"><h1 id="dependency-map">Dependency Map</h1>
+<p>The uPortal Messaging project declares 10 direct dependencies (7 runtime/compile + 1 provided + 1 test + 1 dev-tools), managed via Maven with Spring Boot 1.5.9 as the parent BOM.</p>
+<h2 id="dependencies">Dependencies</h2>
+<div class="mermaid">
+flowchart LR
+    App["uportal-messaging v0.1.0"]
+
+    subgraph BOM["Parent BOM"]
+        SpringBoot["spring-boot-starter-parent v1.5.9.RELEASE"]
+    end
+    subgraph Web["Web Frameworks"]
+        SpringWeb["spring-boot-starter-web"]
+        SpringDataRest["spring-boot-starter-data-rest"]
+        Tomcat["spring-boot-starter-tomcat (provided)"]
+    end
+    subgraph Util["Utilities"]
+        CommonsIO["commons-io v2.6"]
+        CommonsLang["commons-lang3 v3.7"]
+        OrgJson["org.json v20171018"]
+        DevTools["spring-boot-devtools"]
+    end
+
+    App -.->|"manages versions"| BOM
+    App -->|"web"| Web
+    App -->|"utilities"| Util
+    SpringBoot -.->|"governs"| SpringWeb
+    SpringBoot -.->|"governs"| SpringDataRest
+    SpringBoot -.->|"governs"| Tomcat
+    SpringBoot -.->|"governs"| DevTools
+</div>
+<h3 id="dependency-summary">Dependency Summary</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Category</th><th>Count</th><th>Key Libraries</th><th>Notes</th>
+</tr></thead><tbody>
+<tr><td>Web Frameworks</td><td>3</td><td>spring-boot-starter-web, spring-boot-starter-data-rest, spring-boot-starter-tomcat</td><td>Tomcat is provided scope (external container); Data REST adds HATEOAS support</td></tr>
+<tr><td>Utilities</td><td>4</td><td>commons-io 2.6, commons-lang3 3.7, org.json 20171018, spring-boot-devtools</td><td>org.json used for JSON parsing; devtools for hot-reload in development</td></tr>
+</tbody></table></div>
+<h3 id="version-compatibility-risks">Version & Compatibility Risks</h3>
+<p>Spring Boot 1.5.9.RELEASE reached end-of-life in August 2019 and is no longer receiving security patches. It depends on Spring Framework 4.3.x which is also end-of-life. The <code>org.json</code> library version <code>20171018</code> is over 6 years old and there have been many patch releases since. Apache Commons IO 2.6 and Commons Lang3 3.7 are outdated (current versions are 2.16+ and 3.14+ respectively). The project targets Java 1.8, which while still in long-term support via vendors, means it cannot take advantage of modern Java features (records, sealed classes, etc.) available since Java 11/17. Upgrading to Spring Boot 3.x would require migrating to Java 17+ and replacing <code>javax.<em></code> imports with <code>jakarta.</em></code>.</p>
+<h3 id="notable-observations">Notable Observations</h3>
+<ul>
+<li><strong>No database dependency</strong>: The application has zero persistence framework dependencies — all data comes from a static JSON file on the classpath, which is a significant architectural constraint and limits dynamic content.</li>
+<li><strong>Spring Data REST included but underutilized</strong>: <code>spring-boot-starter-data-rest</code> is declared but the application uses plain Spring MVC controllers; the HATEOAS/HAL capabilities of Spring Data REST appear unused.</li>
+<li><strong>No security library</strong>: There is no Spring Security or any authentication/authorization library in the dependencies. Access control relies entirely on the presence and content of the <code>isMemberOf</code> HTTP header, which is trusted implicitly.</li>
+<li><strong>org.json alongside Jackson</strong>: Both <code>org.json</code> (for parsing) and Jackson (via Spring Boot) are on the classpath for JSON handling, which is redundant — the code could use Jackson's ObjectMapper exclusively.</li>
+</ul>
+<h2 id="test-dependencies">Test Dependencies</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Framework</th><th>Version</th><th>Notes</th>
+</tr></thead><tbody>
+<tr><td>spring-boot-starter-test</td><td>Managed by Spring Boot 1.5.9 BOM</td><td>Includes JUnit 4, Mockito, Spring Test, Hamcrest, AssertJ</td></tr>
+</tbody></table></div>
+<p>Total test-scope dependencies: 1 (bundle; resolves to ~6 test libraries transitively)</p>
+<p>The project uses the standard Spring Boot test starter which bundles JUnit 4 (not JUnit 5), Mockito, Spring Test (MockMvc), Hamcrest, and AssertJ. There is no separate integration-test framework beyond Maven Failsafe plugin and Spring Boot's <code>@SpringBootTest</code>. The project has not adopted JUnit 5 / Jupiter, which would be required for a Spring Boot 3.x upgrade.</p></div>
+</div>
+<div id="tab-data" class="tab-panel">
+  <div class="fact-content"><h1 id="data-architecture-persistence-layer">Data Architecture & Persistence Layer</h1>
+<p>The uPortal Messaging application has no relational database. All data is held in a single JSON file on the classpath, deserialized via Jackson into 4 model classes (Message, MessageFilter, ActionButton, Data); no ORM framework is used.</p>
+<h2 id="database-configuration">Database Configuration</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Service/Module</th><th>DB Type</th><th>Profile</th><th>Driver</th><th>Connection</th><th>Migration Tool</th>
+</tr></thead><tbody>
+<tr><td>uportal-messaging</td><td>JSON flat file</td><td>All (single profile)</td><td>None (classpath ResourceLoader)</td><td><code>message.source=classpath:messages.json</code></td><td>None — file is updated manually and redeployed</td></tr>
+</tbody></table></div>
+<p>There is no relational database, JDBC driver, connection pool, or schema migration tool. The data store is a static JSON file bundled with the WAR artifact.</p>
+<h2 id="data-ownership-per-service">Data Ownership per Service</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Service</th><th>Entities Owned</th><th>ORM Framework</th><th>Caching</th><th>Notes</th>
+</tr></thead><tbody>
+<tr><td>uportal-messaging</td><td>Message, MessageFilter, ActionButton, Data</td><td>None (Jackson deserialization only)</td><td>None</td><td>File is read on every request; no write capability exists</td></tr>
+</tbody></table></div>
+<h2 id="entity-model">Entity Model</h2>
+<div class="mermaid">
+erDiagram
+    Message ||--o| MessageFilter : "filtered by"
+    Message ||--o| ActionButton : "action"
+    Message ||--o| ActionButton : "moreInfo"
+    Message ||--o| ActionButton : "confirm"
+    Message ||--o| Data : "carries"
+    MessageArray ||--|{ Message : "contains"
+
+    Message {
+        string id PK
+        string title
+        string titleShort
+        string titleUrl
+        string description
+        string descriptionShort
+        string messageType
+        string featureImageUrl
+        string priority
+        string recurrence
+        string dismissible
+    }
+    MessageFilter {
+        string goLiveDate
+        string expireDate
+        list groups
+    }
+    ActionButton {
+        string label
+        string url
+    }
+    Data {
+        string dataUrl
+        string dataObject
+        string dataArrayFilter
+    }
+    MessageArray {
+        array messages
+    }
+</div>
+<h2 id="key-repository-methods">Key Repository Methods</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Service</th><th>Repository</th><th>Notable Methods</th><th>Purpose</th>
+</tr></thead><tbody>
+<tr><td>uportal-messaging</td><td>MessagesFromTextFile</td><td><code>allMessages()</code></td><td>Reads and deserializes the entire messages JSON file from classpath on every call</td></tr>
+</tbody></table></div>
+<p>There are no Spring Data <code>JpaRepository</code> or <code>CrudRepository</code> interfaces. The sole data-access class is <code>MessagesFromTextFile</code>, a Spring <code>@Repository</code> bean that uses Spring's <code>ResourceLoader</code> and <code>Environment</code> to locate and stream-read the configured JSON file, then deserializes it with Jackson's <code>ObjectMapper</code> into a <code>MessageArray</code> wrapper. There are no custom query methods, no pagination, and no write operations.</p>
+<h2 id="caching-strategy">Caching Strategy</h2>
+<p>No caching is implemented. The <code>MessagesFromTextFile.allMessages()</code> method reads and deserializes the JSON file on every invocation, including for every incoming HTTP request. There are no <code>@Cacheable</code> annotations, no Spring Cache configuration, no EhCache, Redis, or Caffeine dependency, and no second-level cache. For a read-only file-based data store with infrequent changes, introducing a startup-time or timed-expiry in-memory cache would be a low-risk performance improvement.</p>
+<h2 id="data-ownership-boundaries">Data Ownership Boundaries</h2>
+<p>The application is a single deployable unit with a single, wholly-owned data store. There are no cross-service data access patterns, no shared database, and no inter-service queries. The JSON file is exclusively read (never written) by this service; updates require repackaging and redeployment of the WAR.</p>
+<p>Because all data is static and file-based, there are no CQRS, event sourcing, or outbox patterns in use. Read patterns are simple full-collection loads with in-memory filtering.</p>
+<h3 id="data-classification-sensitivity">Data Classification & Sensitivity</h3>
+<div class="table-wrap"><table><thead><tr>
+<th>Entity</th><th>Sensitive Fields</th><th>Classification</th><th>Controls in Place</th>
+</tr></thead><tbody>
+<tr><td>Message</td><td>title, description, titleUrl, actionButton.url</td><td>None — content is public portal announcements</td><td>N/A</td></tr>
+<tr><td>MessageFilter</td><td>groups</td><td>None — group names are organizational labels, not personal data</td><td>N/A</td></tr>
+<tr><td>User</td><td>groups</td><td>None — transient request-scope object, never persisted</td><td>N/A</td></tr>
+</tbody></table></div>
+<p>No PII, PHI, or PCI data is stored or processed. The <code>User</code> object is a transient, per-request model constructed from the <code>isMemberOf</code> HTTP header and is never serialized to disk or a database. Message content is public-facing portal announcements. No encryption-at-rest, data masking, or field-level access controls are required or implemented.</p></div>
+</div>
+<p class="footer">Your feedback is invaluable &mdash; <a href="https://aka.ms/ghcp-appmod/feedback">Share feedback</a></p>
+<script>
+function toggleRow(rowId, triggerRow) {
+  var detail = document.getElementById(rowId);
+  var btn = document.getElementById('btn-' + rowId);
+  if (!detail) return;
+  var visible = detail.style.display !== 'none';
+  detail.style.display = visible ? 'none' : 'table-row';
+  if (btn) btn.classList.toggle('open', !visible);
+}
+(function() {
+  var nav = document.querySelector('.tab-nav');
+  if (!nav) return;
+  nav.addEventListener('click', function(e) {
+    var btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    var targetId = btn.getAttribute('data-tab');
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    var panel = document.getElementById(targetId);
+    if (panel) {
+      panel.classList.add('active');
+      if (window.__mermaidReady) { window.__renderMermaidIn(panel); }
+    }
+  });
+})();
+
+// ── Diagram lightbox ────────────────────────────────────────
+(function() {
+  var lightbox = document.getElementById('diagram-lightbox');
+  var inner = document.getElementById('diagram-lightbox-inner');
+  var closeBtn = document.getElementById('diagram-lightbox-close');
+  if (!lightbox || !inner || !closeBtn) return;
+
+  var scale = 1;
+  var translateX = 0;
+  var translateY = 0;
+  var isDragging = false;
+  var dragStartX = 0;
+  var dragStartY = 0;
+
+  function applyTransform() {
+    var svg = inner.querySelector('svg');
+    if (svg) {
+      svg.style.transform = 'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + scale + ')';
+      svg.style.transformOrigin = 'center center';
+      svg.style.transition = 'none';
+    }
+  }
+
+  function resetTransform() {
+    scale = 1; translateX = 0; translateY = 0;
+    applyTransform();
+  }
+
+  function openLightbox(svgEl) {
+    inner.innerHTML = svgEl.outerHTML;
+    var injected = inner.querySelector('svg');
+    if (injected) {
+      injected.removeAttribute('width');
+      injected.removeAttribute('height');
+      injected.style.cursor = 'grab';
+    }
+    resetTransform();
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    inner.innerHTML = '';
+    document.body.style.overflow = '';
+    resetTransform();
+  }
+
+  inner.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    var delta = e.deltaY > 0 ? 0.9 : 1.1;
+    scale = Math.min(Math.max(scale * delta, 0.3), 8);
+    applyTransform();
+  }, { passive: false });
+
+  inner.addEventListener('mousedown', function(e) {
+    if (e.button !== 0) return;
+    isDragging = true;
+    dragStartX = e.clientX - translateX;
+    dragStartY = e.clientY - translateY;
+    var svg = inner.querySelector('svg');
+    if (svg) { svg.style.cursor = 'grabbing'; }
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    translateX = e.clientX - dragStartX;
+    translateY = e.clientY - dragStartY;
+    applyTransform();
+  });
+
+  document.addEventListener('mouseup', function() {
+    if (!isDragging) return;
+    isDragging = false;
+    var svg = inner.querySelector('svg');
+    if (svg) { svg.style.cursor = 'grab'; }
+  });
+
+  inner.addEventListener('dblclick', function() { resetTransform(); });
+
+  document.addEventListener('click', function(e) {
+    var card = e.target.closest('.mermaid');
+    if (!card) return;
+    if (e.target.closest('.diagram-lightbox-close')) return;
+    var svg = card.querySelector('svg');
+    if (svg) { openLightbox(svg); }
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox) { closeLightbox(); }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeLightbox(); }
+  });
+})();
+
+var _currentTarget = '';
+
+function toggleMultiSelect(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  document.querySelectorAll('.multi-select.open').forEach(function(ms) { if (ms.id !== id) ms.classList.remove('open'); });
+  el.classList.toggle('open');
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.multi-select')) {
+    document.querySelectorAll('.multi-select.open').forEach(function(ms) { ms.classList.remove('open'); });
+  }
+});
+
+function getMultiSelectValues(msId) {
+  var el = document.getElementById(msId);
+  if (!el) return [];
+  var checked = el.querySelectorAll('input[type=checkbox]:checked');
+  var vals = [];
+  for (var i = 0; i < checked.length; i++) vals.push(checked[i].value);
+  return vals;
+}
+
+function onMultiSelectChange(msId, label) {
+  var el = document.getElementById(msId);
+  if (!el) return;
+  var vals = getMultiSelectValues(msId);
+  var total = el.querySelectorAll('input[type=checkbox]').length;
+  var btn = el.querySelector('.multi-select-btn');
+  if (btn) {
+    btn.textContent = vals.length > 0 && vals.length < total ? label + ' (' + vals.length + ')' : label;
+  }
+  applyFilters();
+}
+
+function applyFilters() {
+  var selectedDomains = getMultiSelectValues('domain-ms');
+  var selectedCrits = getMultiSelectValues('criticality-ms');
+
+  var sections = document.querySelectorAll('.issue-section');
+  for (var i = 0; i < sections.length; i++) {
+    var domain = sections[i].getAttribute('data-domain');
+    sections[i].style.display = (selectedDomains.length === 0 || selectedDomains.indexOf(domain) >= 0) ? '' : 'none';
+  }
+
+  var rows = document.querySelectorAll('.issue-row');
+  for (var i = 0; i < rows.length; i++) {
+    var row = rows[i];
+    var section = row.closest('.issue-section');
+    if (section && section.style.display === 'none') {
+      row.style.display = 'none';
+      var next = row.nextElementSibling;
+      if (next && next.classList.contains('detail-row')) next.style.display = 'none';
+      continue;
+    }
+
+    var show = true;
+    if (_currentTarget && row.hasAttribute('data-targets')) {
+      var targetsStr = row.getAttribute('data-targets');
+      if (targetsStr && targetsStr !== '{}') {
+        try {
+          var targets = JSON.parse(targetsStr);
+          if (Object.keys(targets).length > 0 && !targets[_currentTarget]) {
+            show = false;
+          }
+        } catch(e) {}
+      }
+    }
+
+    if (show && selectedCrits.length > 0) {
+      var crit = row.getAttribute('data-criticality');
+      if (selectedCrits.indexOf(crit) < 0) show = false;
+    }
+
+    row.style.display = show ? '' : 'none';
+    var nextRow = row.nextElementSibling;
+    if (nextRow && nextRow.classList.contains('detail-row')) {
+      if (!show) nextRow.style.display = 'none';
+    }
+  }
+}
+
+function clearAllFilters() {
+  document.querySelectorAll('.multi-select input[type=checkbox]').forEach(function(cb) { cb.checked = false; });
+  var domainBtn = document.querySelector('#domain-ms .multi-select-btn');
+  if (domainBtn) domainBtn.textContent = 'Domain';
+  var critBtn = document.querySelector('#criticality-ms .multi-select-btn');
+  if (critBtn) critBtn.textContent = 'Criticality';
+  applyFilters();
+}
+
+function onTargetChange(targetId) {
+  _currentTarget = targetId;
+  var rows = document.querySelectorAll('.issue-row[data-targets]');
+  var totalEffort = 0;
+  var domainCrits = {};
+
+  for (var i = 0; i < rows.length; i++) {
+    var row = rows[i];
+    var targets = JSON.parse(row.getAttribute('data-targets'));
+    var section = row.closest('.issue-section');
+    var domain = section ? section.getAttribute('data-domain') : '';
+
+    if (!targets || Object.keys(targets).length === 0) {
+      var sp = parseFloat(row.querySelector('.sp-cell').textContent) || 0;
+      totalEffort += sp;
+      if (!domainCrits[domain]) domainCrits[domain] = {mandatory:0,potential:0,optional:0};
+      var crit = row.getAttribute('data-criticality') || 'optional';
+      domainCrits[domain][crit] = (domainCrits[domain][crit] || 0) + 1;
+      continue;
+    }
+
+    var override = targets[targetId];
+    if (!override) {
+      continue;
+    }
+
+    var newSeverity = (override.severity || row.getAttribute('data-default-severity') || '').toLowerCase();
+    row.setAttribute('data-criticality', newSeverity);
+    var critCell = row.querySelector('.crit-cell');
+    if (critCell) {
+      var critText = newSeverity === 'mandatory' ? 'Mandatory' : newSeverity === 'potential' ? 'Potential' : 'Optional';
+      var cssClass = newSeverity === 'mandatory' ? 'crit-square-mandatory' : newSeverity === 'potential' ? 'crit-square-potential' : 'crit-square-optional';
+      critCell.innerHTML = '<span class="crit-label"><span class="crit-square ' + cssClass + '"></span>' + critText + '</span>';
+    }
+
+    var newEffort = override.effort !== undefined ? override.effort : parseFloat(row.getAttribute('data-default-effort')) || 0;
+    var spCell = row.querySelector('.sp-cell');
+    if (spCell) spCell.textContent = newEffort;
+    totalEffort += newEffort;
+
+    if (!domainCrits[domain]) domainCrits[domain] = {mandatory:0,potential:0,optional:0};
+    domainCrits[domain][newSeverity] = (domainCrits[domain][newSeverity] || 0) + 1;
+  }
+
+  var secSection = document.querySelector('.issue-section[data-domain="security"]');
+  if (secSection) {
+    var secRows = secSection.querySelectorAll('.issue-row');
+    for (var j = 0; j < secRows.length; j++) {
+      if (!secRows[j].hasAttribute('data-targets') || secRows[j].getAttribute('data-targets') === '') {
+        var sp = parseFloat(secRows[j].querySelector('.sp-cell').textContent) || 0;
+        totalEffort += sp;
+        if (!domainCrits['security']) domainCrits['security'] = {mandatory:0,potential:0,optional:0};
+        var sc = secRows[j].getAttribute('data-criticality') || 'optional';
+        domainCrits['security'][sc] = (domainCrits['security'][sc] || 0) + 1;
+      }
+    }
+  }
+
+  var label = totalEffort < 20 ? 'S' : totalEffort < 50 ? 'M' : totalEffort < 100 ? 'L' : 'XL';
+  var effortEl = document.getElementById('effort-display');
+  if (effortEl) effortEl.textContent = label + ' (total story points: ' + totalEffort + ')';
+
+  updateDonuts(domainCrits);
+  applyFilters();
+}
+
+function updateDonuts(domainCrits) {
+  var container = document.getElementById('donut-container');
+  if (!container) return;
+  container.innerHTML = '';
+  var domainNames = {'cloud-readiness':'Cloud Readiness','java-upgrade':'Java Upgrade','dotnet-upgrade':'DotNET Upgrade','security':'Security'};
+  var domainOrder = ['cloud-readiness','java-upgrade','dotnet-upgrade','security'];
+  for (var d = 0; d < domainOrder.length; d++) {
+    var key = domainOrder[d];
+    var c = domainCrits[key];
+    if (!c || (c.mandatory + c.potential + c.optional) === 0) continue;
+    var total = c.mandatory + c.potential + c.optional;
+    var div = document.createElement('div');
+    div.className = 'domain-summary-item';
+    div.innerHTML = buildDonutSvg(c.mandatory, c.potential, c.optional) +
+      '<h3>' + domainNames[key] + '</h3>' +
+      '<div class="count">' + total + ' issue' + (total !== 1 ? 's' : '') + '</div>';
+    container.appendChild(div);
+  }
+}
+
+function buildDonutSvg(m, p, o) {
+  var total = m + p + o;
+  if (total === 0) return '<svg viewBox="0 0 100 100" width="100" height="100" style="display:block;margin:0 auto;"><circle cx="50" cy="50" r="35" fill="none" stroke="#d0d7de" stroke-width="15" opacity="0.5"/></svg>';
+  var r = 35, circ = 2 * Math.PI * r, offset = 0;
+  var svg = '<svg viewBox="0 0 100 100" width="100" height="100" style="display:block;margin:0 auto;transform:rotate(-90deg);">';
+  var segs = [{c:m,color:'var(--color-mandatory)'},{c:p,color:'var(--color-potential)'},{c:o,color:'var(--color-optional)'}];
+  for (var i = 0; i < segs.length; i++) {
+    if (segs[i].c === 0) continue;
+    var segLen = (segs[i].c / total) * circ;
+    var gap = total > segs[i].c ? 1.5 : 0;
+    var drawLen = Math.max(segLen - gap, 0.5);
+    svg += '<circle cx="50" cy="50" r="' + r + '" fill="none" stroke="' + segs[i].color + '" stroke-width="15" stroke-dasharray="' + drawLen.toFixed(2) + ' ' + circ.toFixed(2) + '" stroke-dashoffset="' + (-offset).toFixed(2) + '"/>';
+    offset += segLen;
+  }
+  svg += '</svg>';
+  return svg;
+}
+</script>
+<script>document.addEventListener('DOMContentLoaded', function() { onTargetChange('azure-appservice'); });</script>
+</div></body></html>

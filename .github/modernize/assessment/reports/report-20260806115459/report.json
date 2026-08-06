@@ -1,0 +1,1178 @@
+{
+  "version": "1.0.0",
+  "producer": "Java AppCAT CLI",
+  "metadata": {
+    "analysisStartTime": "2026-08-06T11:54:59.566400804Z",
+    "analysisEndTime": "2026-08-06T11:55:12.888388607Z",
+    "status": "Complete",
+    "privacyMode": "Protected",
+    "privacyModeHelpUrl": "https://aka.ms/appcat-privacy-mode",
+    "targetIds": [
+      "azure-appservice",
+      "azure-aks",
+      "azure-container-apps"
+    ],
+    "targetDisplayNames": [
+      "Azure App Service",
+      "Azure Kubernetes Service",
+      "Azure Container Apps"
+    ],
+    "capabilities": [
+      "openjdk25",
+      "containerization"
+    ],
+    "os": [
+      "linux",
+      "windows"
+    ],
+    "domains": [
+      "java-upgrade",
+      "cloud-readiness",
+      "security"
+    ],
+    "mode": "full",
+    "minimumCveSeverity": "high"
+  },
+  "summary": {
+    "totalProjects": 1,
+    "totalIssues": 4,
+    "totalIncidents": 7,
+    "totalEffort": 26,
+    "charts": {
+      "severity": {
+        "mandatory": 7,
+        "optional": 0,
+        "potential": 0,
+        "information": 0
+      },
+      "category": {
+        "containerization": 1,
+        "java-version-upgrade": 1,
+        "local-resource-access": 1,
+        "remote-communication": 4
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": ".",
+      "issues": 4,
+      "storyPoints": 26,
+      "properties": {
+        "appName": "uportal-messaging",
+        "jdkVersion": "1.8",
+        "frameworks": [
+          "Spring Boot",
+          "Spring"
+        ],
+        "languages": [
+          "Java",
+          "Python"
+        ],
+        "tools": [
+          "Maven"
+        ]
+      },
+      "incidents": [
+        {
+          "ruleId": "azure-java-version-01000",
+          "incidentId": "fb924343-11ed-46ef-bb4c-1e4269148ec8",
+          "location": "pom.xml",
+          "locationKind": "File",
+          "line": 122,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 8,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 8,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 8,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=azure/springboot"
+          ]
+        },
+        {
+          "ruleId": "localhost-http-00001",
+          "incidentId": "ba43ccf8-c12a-4744-8a1a-ad9d31dab173",
+          "location": "src/test/java/edu/wisc/my/messages/controller/MessagesControllerIT.java",
+          "locationKind": "File",
+          "line": 32,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "dockerfile-00000",
+          "incidentId": "85db7391-a009-4605-8509-81ef5f664031",
+          "location": "",
+          "locationKind": "",
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "unsecure-network-protocol-00000",
+          "incidentId": "a343fe05-90f9-42dd-a3d3-794f8add200e",
+          "location": "src/test/java/edu/wisc/my/messages/controller/MessagesControllerIT.java",
+          "locationKind": "File",
+          "line": 32,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "unsecure-network-protocol-00000",
+          "incidentId": "75225346-49df-4315-a59f-78b7caed85b5",
+          "location": "src/test/java/edu/wisc/my/messages/controller/MessagesControllerTest.java",
+          "locationKind": "File",
+          "line": 81,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "unsecure-network-protocol-00000",
+          "incidentId": "d94293cc-2ecf-44be-a0f9-8aa4df6c7024",
+          "location": "src/test/java/edu/wisc/my/messages/model/ActionButtonTest.java",
+          "locationKind": "File",
+          "line": 14,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "unsecure-network-protocol-00000",
+          "incidentId": "474f8f7c-7423-405d-a392-1d8d4c266659",
+          "location": "src/test/java/edu/wisc/my/messages/model/ActionButtonTest.java",
+          "locationKind": "File",
+          "line": 17,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        }
+      ]
+    }
+  ],
+  "rules": {
+    "azure-java-version-01000": {
+      "id": "azure-java-version-01000",
+      "description": "The application is using a Java version that has reached the end of support. It is strongly recommended to plan and execute a migration strategy to upgrade your application to a supported Java version.\nSupported Java versions receive long-term support (LTS) from the Java community, including bug fixes and updates. Migrating to a supported version provides you with a stable and well-maintained platform for your application.",
+      "title": "Java Version Has Reached the End of Support",
+      "severity": "mandatory",
+      "effort": 8,
+      "labels": [
+        "target=azure-appservice",
+        "target=azure-aks",
+        "target=azure-container-apps",
+        "source",
+        "domain=java-upgrade",
+        "category=java-version-upgrade",
+        "version",
+        "os=windows",
+        "os=linux"
+      ]
+    },
+    "dockerfile-00000": {
+      "id": "dockerfile-00000",
+      "description": "No Dockerfile was found in the project. This suggests the application may not yet be containerized. \nConsider creating a Dockerfile to enable container-based replatforming to Azure services such as Azure Container Apps or AKS.",
+      "title": "No Dockerfile found",
+      "severity": "mandatory",
+      "effort": 3,
+      "links": [
+        {
+          "url": "https://www.baeldung.com/java-dockerize-app",
+          "title": "Dockerizing a Java Application"
+        }
+      ],
+      "labels": [
+        "target=azure-aks",
+        "target=azure-container-apps",
+        "capability=containerization",
+        "source",
+        "domain=cloud-readiness",
+        "category=containerization",
+        "containerization",
+        "os=windows",
+        "os=linux"
+      ]
+    },
+    "localhost-http-00001": {
+      "id": "localhost-http-00001",
+      "description": "The app is trying to access local resource by HTTP, please try to migrate the resource to cloud",
+      "title": "Local HTTP Calls",
+      "severity": "mandatory",
+      "effort": 3,
+      "labels": [
+        "target=azure-aks",
+        "target=azure-container-apps",
+        "target=azure-appservice",
+        "capability=containerization",
+        "source",
+        "domain=cloud-readiness",
+        "category=local-resource-access",
+        "localhost",
+        "containerization",
+        "os=windows",
+        "os=linux"
+      ]
+    },
+    "unsecure-network-protocol-00000": {
+      "id": "unsecure-network-protocol-00000",
+      "description": "Using secured protocols such as HTTPS and SFTP (over HTTP and FTP) should now be the norm as applications are more and more exposed and interconnected. \nThis CloudReady patterns looks for unescured URI in the source code or deprecated URI libraries. \nIdeally, URLs should be replaced in your source code by secured protocols HTTPS and SFTP (and ensure the infrastructure implements these protocols for the resources your application calls, uses or references).",
+      "title": "Use of unsecured network protocols or URI libraries",
+      "severity": "mandatory",
+      "effort": 3,
+      "links": [
+        {
+          "url": "https://developers.google.com/web/fundamentals/security/encrypt-in-transit/why-https",
+          "title": "Why HTTPS matters"
+        },
+        {
+          "url": "https://www.ssh.com/ssh/sftp/",
+          "title": "SSH File Transfer Protocol (SFTP): Get SFTP client & server"
+        }
+      ],
+      "labels": [
+        "target=azure-aks",
+        "target=azure-container-apps",
+        "target=azure-appservice",
+        "capability=containerization",
+        "source",
+        "domain=cloud-readiness",
+        "category=remote-communication",
+        "containerization",
+        "os=windows",
+        "os=linux"
+      ]
+    }
+  },
+  "security": [
+    {
+      "id": "GHSA-r7wm-3cxj-wff9",
+      "title": "jackson-core: Async parser maxNumberLength bypass via chunked digit accumulation (incomplete fix for GHSA-72hv-8253-57qq)",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[GHSA-r7wm-3cxj-wff9](https://github.com/advisories/GHSA-r7wm-3cxj-wff9): jackson-core: Async parser maxNumberLength bypass via chunked digit accumulation (incomplete fix for GHSA-72hv-8253-57qq)\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-core:2.8.10 (vulnerable range: < 2.18.8) (declared at pom.xml)\n    Fix: Upgrade to 2.18.8\n  - com.fasterxml.jackson.core:jackson-core:2.8.10 (vulnerable range: >= 2.19.0, < 2.21.4) (declared at pom.xml)\n    Fix: Upgrade to 2.21.4",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[GHSA-r7wm-3cxj-wff9](https://github.com/advisories/GHSA-r7wm-3cxj-wff9): jackson-core: Async parser maxNumberLength bypass via chunked digit accumulation (incomplete fix for GHSA-72hv-8253-57qq)\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-core:2.8.10 (vulnerable range: < 2.18.8) (declared at pom.xml)\n    Fix: Upgrade to 2.18.8\n  - com.fasterxml.jackson.core:jackson-core:2.8.10 (vulnerable range: >= 2.19.0, < 2.21.4) (declared at pom.xml)\n    Fix: Upgrade to 2.21.4"
+      }
+    },
+    {
+      "id": "CVE-2026-41850",
+      "title": "Spring Framework Algorithmic Denial of Service via SpEL Expressions",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-41850](https://github.com/advisories/GHSA-r5w3-xv2f-j59q): Spring Framework Algorithmic Denial of Service via SpEL Expressions\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 7.0.0, <= 7.0.7) (declared at pom.xml)\n    Fix: Upgrade to 7.0.8\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 6.2.0, <= 6.2.18) (declared at pom.xml)\n    Fix: Upgrade to 6.2.19\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 6.1.0, <= 6.1.21) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-41850](https://github.com/advisories/GHSA-r5w3-xv2f-j59q): Spring Framework Algorithmic Denial of Service via SpEL Expressions\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 7.0.0, <= 7.0.7) (declared at pom.xml)\n    Fix: Upgrade to 7.0.8\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 6.2.0, <= 6.2.18) (declared at pom.xml)\n    Fix: Upgrade to 6.2.19\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 6.1.0, <= 6.1.21) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2026-41849",
+      "title": "Spring Framework Denial of Service via Integer Overflow in SpEL Expressions",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-41849](https://github.com/advisories/GHSA-775g-4xr8-78h8): Spring Framework Denial of Service via Integer Overflow in SpEL Expressions\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-41849](https://github.com/advisories/GHSA-775g-4xr8-78h8): Spring Framework Denial of Service via Integer Overflow in SpEL Expressions\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2026-41845",
+      "title": "Spring Framework Cross-site Scripting via JavaScriptUtils",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-41845](https://github.com/advisories/GHSA-3chg-m5w7-qfv5): Spring Framework Cross-site Scripting via JavaScriptUtils\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 7.0.0, <= 7.0.7) (declared at pom.xml)\n    Fix: Upgrade to 7.0.8\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.2.0, <= 6.2.18) (declared at pom.xml)\n    Fix: Upgrade to 6.2.19\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.1.0, <= 6.1.21) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-41845](https://github.com/advisories/GHSA-3chg-m5w7-qfv5): Spring Framework Cross-site Scripting via JavaScriptUtils\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 7.0.0, <= 7.0.7) (declared at pom.xml)\n    Fix: Upgrade to 7.0.8\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.2.0, <= 6.2.18) (declared at pom.xml)\n    Fix: Upgrade to 6.2.19\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.1.0, <= 6.1.21) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2026-41842",
+      "title": "Spring Framework Denial of Service via Versioned Resources in Spring MVC and WebFlux",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-41842](https://github.com/advisories/GHSA-x23c-287f-qqv5): Spring Framework Denial of Service via Versioned Resources in Spring MVC and WebFlux\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 7.0.0, <= 7.0.7) (declared at pom.xml)\n    Fix: Upgrade to 7.0.8\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.2.0, <= 6.2.18) (declared at pom.xml)\n    Fix: Upgrade to 6.2.19\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.1.0, <= 6.1.21) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-41842](https://github.com/advisories/GHSA-x23c-287f-qqv5): Spring Framework Denial of Service via Versioned Resources in Spring MVC and WebFlux\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 7.0.0, <= 7.0.7) (declared at pom.xml)\n    Fix: Upgrade to 7.0.8\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.2.0, <= 6.2.18) (declared at pom.xml)\n    Fix: Upgrade to 6.2.19\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.1.0, <= 6.1.21) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2026-41284",
+      "title": "Apache Tomcat: Unbounded read in WebDAV LOCK and  PROPFIND handling",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-41284](https://github.com/advisories/GHSA-gx5v-xp9w-j4cg): Apache Tomcat: Unbounded read in WebDAV LOCK and  PROPFIND handling\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-41284](https://github.com/advisories/GHSA-gx5v-xp9w-j4cg): Apache Tomcat: Unbounded read in WebDAV LOCK and  PROPFIND handling\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22"
+      }
+    },
+    {
+      "id": "CVE-2026-43512",
+      "title": "Apache Tomcat - Digest authenticator will authenticate any unknown user",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-43512](https://github.com/advisories/GHSA-h6fc-48rj-7qqh): Apache Tomcat - Digest authenticator will authenticate any unknown user\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-43512](https://github.com/advisories/GHSA-h6fc-48rj-7qqh): Apache Tomcat - Digest authenticator will authenticate any unknown user\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22"
+      }
+    },
+    {
+      "id": "CVE-2026-43513",
+      "title": "Apache Tomcat: LockOutRealm treats user names as case-sensitive",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-43513](https://github.com/advisories/GHSA-5mp6-jrq3-r938): Apache Tomcat: LockOutRealm treats user names as case-sensitive\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-43513](https://github.com/advisories/GHSA-5mp6-jrq3-r938): Apache Tomcat: LockOutRealm treats user names as case-sensitive\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22"
+      }
+    },
+    {
+      "id": "CVE-2026-43515",
+      "title": "Apache Tomcat - Security constraints not correctly applied",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-43515](https://github.com/advisories/GHSA-5m62-pw8w-7w9f): Apache Tomcat - Security constraints not correctly applied\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-43515](https://github.com/advisories/GHSA-5m62-pw8w-7w9f): Apache Tomcat - Security constraints not correctly applied\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22"
+      }
+    },
+    {
+      "id": "CVE-2026-41293",
+      "title": "Apache Tomcat - HTTP/2 request headers not validated",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-41293](https://github.com/advisories/GHSA-r29c-68gh-xp6x): Apache Tomcat - HTTP/2 request headers not validated\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-41293](https://github.com/advisories/GHSA-r29c-68gh-xp6x): Apache Tomcat - HTTP/2 request headers not validated\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22"
+      }
+    },
+    {
+      "id": "CVE-2026-42498",
+      "title": "Apache Tomcat - WebSocket authentication header exposure",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-42498](https://github.com/advisories/GHSA-fv25-8xcx-gqjc): Apache Tomcat - WebSocket authentication header exposure\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-42498](https://github.com/advisories/GHSA-fv25-8xcx-gqjc): Apache Tomcat - WebSocket authentication header exposure\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: < 9.0.118) (declared at pom.xml)\n    Fix: Upgrade to 9.0.118\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.55) (declared at pom.xml)\n    Fix: Upgrade to 10.1.55\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.22) (declared at pom.xml)\n    Fix: Upgrade to 11.0.22"
+      }
+    },
+    {
+      "id": "CVE-2026-24880",
+      "title": "Apache Tomcat has an HTTP Request/Response Smuggling vulnerability",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-24880](https://github.com/advisories/GHSA-563x-q5rq-57qp): Apache Tomcat has an HTTP Request/Response Smuggling vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 7.0.0, < 9.0.116) (declared at pom.xml)\n    Fix: Upgrade to 9.0.116\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.52) (declared at pom.xml)\n    Fix: Upgrade to 10.1.52\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, <= 11.0.18) (declared at pom.xml)\n    Fix: Upgrade to 11.0.20",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2026-24880](https://github.com/advisories/GHSA-563x-q5rq-57qp): Apache Tomcat has an HTTP Request/Response Smuggling vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 7.0.0, < 9.0.116) (declared at pom.xml)\n    Fix: Upgrade to 9.0.116\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.52) (declared at pom.xml)\n    Fix: Upgrade to 10.1.52\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, <= 11.0.18) (declared at pom.xml)\n    Fix: Upgrade to 11.0.20"
+      }
+    },
+    {
+      "id": "CVE-2025-55752",
+      "title": "Apache Tomcat Vulnerable to Relative Path Traversal",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2025-55752](https://github.com/advisories/GHSA-wmwf-9ccg-fff5): Apache Tomcat Vulnerable to Relative Path Traversal\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.11) (declared at pom.xml)\n    Fix: Upgrade to 11.0.11\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.45) (declared at pom.xml)\n    Fix: Upgrade to 10.1.45\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0-M11, < 9.0.109) (declared at pom.xml)\n    Fix: Upgrade to 9.0.109\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.6, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2025-55752](https://github.com/advisories/GHSA-wmwf-9ccg-fff5): Apache Tomcat Vulnerable to Relative Path Traversal\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.11) (declared at pom.xml)\n    Fix: Upgrade to 11.0.11\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.45) (declared at pom.xml)\n    Fix: Upgrade to 10.1.45\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0-M11, < 9.0.109) (declared at pom.xml)\n    Fix: Upgrade to 9.0.109\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.6, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2025-53506",
+      "title": "Apache Tomcat Coyote vulnerable to Denial of Service via excessive HTTP/2 streams",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2025-53506](https://github.com/advisories/GHSA-25xr-qj8w-c4vf): Apache Tomcat Coyote vulnerable to Denial of Service via excessive HTTP/2 streams\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.107) (declared at pom.xml)\n    Fix: Upgrade to 9.0.107\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.43) (declared at pom.xml)\n    Fix: Upgrade to 10.1.43\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.9) (declared at pom.xml)\n    Fix: Upgrade to 11.0.9",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2025-53506](https://github.com/advisories/GHSA-25xr-qj8w-c4vf): Apache Tomcat Coyote vulnerable to Denial of Service via excessive HTTP/2 streams\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.107) (declared at pom.xml)\n    Fix: Upgrade to 9.0.107\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.43) (declared at pom.xml)\n    Fix: Upgrade to 10.1.43\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.9) (declared at pom.xml)\n    Fix: Upgrade to 11.0.9"
+      }
+    },
+    {
+      "id": "CVE-2025-52520",
+      "title": "Apache Tomcat Catalina is vulnerable to DoS attack through bypassing of size limits",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2025-52520](https://github.com/advisories/GHSA-wr62-c79q-cv37): Apache Tomcat Catalina is vulnerable to DoS attack through bypassing of size limits\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.9) (declared at pom.xml)\n    Fix: Upgrade to 11.0.9\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.43) (declared at pom.xml)\n    Fix: Upgrade to 10.1.43\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.107) (declared at pom.xml)\n    Fix: Upgrade to 9.0.107\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2025-52520](https://github.com/advisories/GHSA-wr62-c79q-cv37): Apache Tomcat Catalina is vulnerable to DoS attack through bypassing of size limits\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.9) (declared at pom.xml)\n    Fix: Upgrade to 11.0.9\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.43) (declared at pom.xml)\n    Fix: Upgrade to 10.1.43\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.107) (declared at pom.xml)\n    Fix: Upgrade to 9.0.107\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2025-52999",
+      "title": "jackson-core can throw a StackoverflowError when processing deeply nested data",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2025-52999](https://github.com/advisories/GHSA-h46c-h94j-95f3): jackson-core can throw a StackoverflowError when processing deeply nested data\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-core:2.8.10 (vulnerable range: < 2.15.0) (declared at pom.xml)\n    Fix: Upgrade to 2.15.0",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2025-52999](https://github.com/advisories/GHSA-h46c-h94j-95f3): jackson-core can throw a StackoverflowError when processing deeply nested data\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-core:2.8.10 (vulnerable range: < 2.15.0) (declared at pom.xml)\n    Fix: Upgrade to 2.15.0"
+      }
+    },
+    {
+      "id": "CVE-2025-48988",
+      "title": "Apache Tomcat - DoS in multipart upload",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2025-48988](https://github.com/advisories/GHSA-h3gc-qfqq-6h8f): Apache Tomcat - DoS in multipart upload\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, <= 11.0.7) (declared at pom.xml)\n    Fix: Upgrade to 11.0.8\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, <= 10.1.41) (declared at pom.xml)\n    Fix: Upgrade to 10.1.42\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, <= 9.0.105) (declared at pom.xml)\n    Fix: Upgrade to 9.0.106\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2025-48988](https://github.com/advisories/GHSA-h3gc-qfqq-6h8f): Apache Tomcat - DoS in multipart upload\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, <= 11.0.7) (declared at pom.xml)\n    Fix: Upgrade to 11.0.8\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, <= 10.1.41) (declared at pom.xml)\n    Fix: Upgrade to 10.1.42\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, <= 9.0.105) (declared at pom.xml)\n    Fix: Upgrade to 9.0.106\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2025-24813",
+      "title": "Apache Tomcat: Potential RCE and/or information disclosure and/or information corruption with partial PUT",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2025-24813](https://github.com/advisories/GHSA-83qj-6fr2-vhqg): Apache Tomcat: Potential RCE and/or information disclosure and/or information corruption with partial PUT\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.3) (declared at pom.xml)\n    Fix: Upgrade to 11.0.3\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.35) (declared at pom.xml)\n    Fix: Upgrade to 10.1.35\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.99) (declared at pom.xml)\n    Fix: Upgrade to 9.0.99\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2025-24813](https://github.com/advisories/GHSA-83qj-6fr2-vhqg): Apache Tomcat: Potential RCE and/or information disclosure and/or information corruption with partial PUT\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.3) (declared at pom.xml)\n    Fix: Upgrade to 11.0.3\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.35) (declared at pom.xml)\n    Fix: Upgrade to 10.1.35\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.99) (declared at pom.xml)\n    Fix: Upgrade to 9.0.99\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2024-38819",
+      "title": "Spring Framework Path Traversal vulnerability",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2024-38819](https://github.com/advisories/GHSA-g5vr-rgqm-vf78): Spring Framework Path Traversal vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.1.0, < 6.1.14) (declared at pom.xml)\n    Fix: Upgrade to 6.1.14\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.0.0, <= 6.0.23) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2024-38819](https://github.com/advisories/GHSA-g5vr-rgqm-vf78): Spring Framework Path Traversal vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.1.0, < 6.1.14) (declared at pom.xml)\n    Fix: Upgrade to 6.1.14\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: <= 5.3.39) (declared at pom.xml)\n    Fix: No patched version available; check advisory\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 6.0.0, <= 6.0.23) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2024-50379",
+      "title": "Apache Tomcat Time-of-check Time-of-use (TOCTOU) Race Condition vulnerability",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2024-50379](https://github.com/advisories/GHSA-5j33-cvvr-w245): Apache Tomcat Time-of-check Time-of-use (TOCTOU) Race Condition vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.2) (declared at pom.xml)\n    Fix: Upgrade to 11.0.2\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.34) (declared at pom.xml)\n    Fix: Upgrade to 10.1.34\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.98) (declared at pom.xml)\n    Fix: Upgrade to 9.0.98\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2024-50379](https://github.com/advisories/GHSA-5j33-cvvr-w245): Apache Tomcat Time-of-check Time-of-use (TOCTOU) Race Condition vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.2) (declared at pom.xml)\n    Fix: Upgrade to 11.0.2\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.34) (declared at pom.xml)\n    Fix: Upgrade to 10.1.34\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.98) (declared at pom.xml)\n    Fix: Upgrade to 9.0.98\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2024-47554",
+      "title": "Apache Commons IO: Possible denial of service attack on untrusted input to XmlStreamReader",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2024-47554](https://github.com/advisories/GHSA-78wr-2p64-hpwj): Apache Commons IO: Possible denial of service attack on untrusted input to XmlStreamReader\n\nSeverity: HIGH\n\nAffected dependencies:\n  - commons-io:commons-io:2.6 (vulnerable range: >= 2.0, < 2.14.0) (declared at pom.xml:91)\n    Fix: Upgrade to 2.14.0",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml:91"
+        ],
+        "explanation": "[CVE-2024-47554](https://github.com/advisories/GHSA-78wr-2p64-hpwj): Apache Commons IO: Possible denial of service attack on untrusted input to XmlStreamReader\n\nSeverity: HIGH\n\nAffected dependencies:\n  - commons-io:commons-io:2.6 (vulnerable range: >= 2.0, < 2.14.0) (declared at pom.xml:91)\n    Fix: Upgrade to 2.14.0"
+      }
+    },
+    {
+      "id": "CVE-2024-34750",
+      "title": "Apache Tomcat - Denial of Service",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2024-34750](https://github.com/advisories/GHSA-wm9w-rjj3-j356): Apache Tomcat - Denial of Service\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.0-M21) (declared at pom.xml)\n    Fix: Upgrade to 11.0.0-M21\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.25) (declared at pom.xml)\n    Fix: Upgrade to 10.1.25\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0-M1, < 9.0.90) (declared at pom.xml)\n    Fix: Upgrade to 9.0.90\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2024-34750](https://github.com/advisories/GHSA-wm9w-rjj3-j356): Apache Tomcat - Denial of Service\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.0-M21) (declared at pom.xml)\n    Fix: Upgrade to 11.0.0-M21\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.25) (declared at pom.xml)\n    Fix: Upgrade to 10.1.25\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0-M1, < 9.0.90) (declared at pom.xml)\n    Fix: Upgrade to 9.0.90\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, <= 8.5.100) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2024-22262",
+      "title": "Spring Framework URL Parsing with Host Validation",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2024-22262](https://github.com/advisories/GHSA-2wrp-6fg6-hmc5): Spring Framework URL Parsing with Host Validation\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: < 5.3.34) (declared at pom.xml)\n    Fix: Upgrade to 5.3.34\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.0.0, < 6.0.19) (declared at pom.xml)\n    Fix: Upgrade to 6.0.19\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.1.0, < 6.1.6) (declared at pom.xml)\n    Fix: Upgrade to 6.1.6",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2024-22262](https://github.com/advisories/GHSA-2wrp-6fg6-hmc5): Spring Framework URL Parsing with Host Validation\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: < 5.3.34) (declared at pom.xml)\n    Fix: Upgrade to 5.3.34\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.0.0, < 6.0.19) (declared at pom.xml)\n    Fix: Upgrade to 6.0.19\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.1.0, < 6.1.6) (declared at pom.xml)\n    Fix: Upgrade to 6.1.6"
+      }
+    },
+    {
+      "id": "CVE-2024-22259",
+      "title": "Spring Framework URL Parsing with Host Validation Vulnerability",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2024-22259](https://github.com/advisories/GHSA-hgjh-9rj2-g67j): Spring Framework URL Parsing with Host Validation Vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.1.0, < 6.1.5) (declared at pom.xml)\n    Fix: Upgrade to 6.1.5\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.0.0, < 6.0.18) (declared at pom.xml)\n    Fix: Upgrade to 6.0.18\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: < 5.3.33) (declared at pom.xml)\n    Fix: Upgrade to 5.3.33",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2024-22259](https://github.com/advisories/GHSA-hgjh-9rj2-g67j): Spring Framework URL Parsing with Host Validation Vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.1.0, < 6.1.5) (declared at pom.xml)\n    Fix: Upgrade to 6.1.5\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.0.0, < 6.0.18) (declared at pom.xml)\n    Fix: Upgrade to 6.0.18\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: < 5.3.33) (declared at pom.xml)\n    Fix: Upgrade to 5.3.33"
+      }
+    },
+    {
+      "id": "CVE-2024-22243",
+      "title": "Spring Web vulnerable to Open Redirect or Server Side Request Forgery",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2024-22243](https://github.com/advisories/GHSA-ccgv-vj62-xf9h): Spring Web vulnerable to Open Redirect or Server Side Request Forgery\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.1.0, < 6.1.4) (declared at pom.xml)\n    Fix: Upgrade to 6.1.4\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.0.0, < 6.0.17) (declared at pom.xml)\n    Fix: Upgrade to 6.0.17\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.32) (declared at pom.xml)\n    Fix: Upgrade to 5.3.32\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: <= 5.2.25.RELEASE) (declared at pom.xml)\n    Fix: No patched version available; check advisory",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2024-22243](https://github.com/advisories/GHSA-ccgv-vj62-xf9h): Spring Web vulnerable to Open Redirect or Server Side Request Forgery\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.1.0, < 6.1.4) (declared at pom.xml)\n    Fix: Upgrade to 6.1.4\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 6.0.0, < 6.0.17) (declared at pom.xml)\n    Fix: Upgrade to 6.0.17\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.32) (declared at pom.xml)\n    Fix: Upgrade to 5.3.32\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: <= 5.2.25.RELEASE) (declared at pom.xml)\n    Fix: No patched version available; check advisory"
+      }
+    },
+    {
+      "id": "CVE-2023-6378",
+      "title": "logback serialization vulnerability",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2023-6378](https://github.com/advisories/GHSA-vmq6-5m68-f53m): logback serialization vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: >= 1.4.0, < 1.4.12) (declared at pom.xml)\n    Fix: Upgrade to 1.4.12\n  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: >= 1.4.0, < 1.4.12) (declared at pom.xml)\n    Fix: Upgrade to 1.4.12\n  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: >= 1.3.0, < 1.3.12) (declared at pom.xml)\n    Fix: Upgrade to 1.3.12\n  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: >= 1.3.0, < 1.3.12) (declared at pom.xml)\n    Fix: Upgrade to 1.3.12\n  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: < 1.2.13) (declared at pom.xml)\n    Fix: Upgrade to 1.2.13\n  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: < 1.2.13) (declared at pom.xml)\n    Fix: Upgrade to 1.2.13",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2023-6378](https://github.com/advisories/GHSA-vmq6-5m68-f53m): logback serialization vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: >= 1.4.0, < 1.4.12) (declared at pom.xml)\n    Fix: Upgrade to 1.4.12\n  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: >= 1.4.0, < 1.4.12) (declared at pom.xml)\n    Fix: Upgrade to 1.4.12\n  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: >= 1.3.0, < 1.3.12) (declared at pom.xml)\n    Fix: Upgrade to 1.3.12\n  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: >= 1.3.0, < 1.3.12) (declared at pom.xml)\n    Fix: Upgrade to 1.3.12\n  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: < 1.2.13) (declared at pom.xml)\n    Fix: Upgrade to 1.2.13\n  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: < 1.2.13) (declared at pom.xml)\n    Fix: Upgrade to 1.2.13"
+      }
+    },
+    {
+      "id": "CVE-2023-46589",
+      "title": "Apache Tomcat Improper Input Validation vulnerability",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2023-46589](https://github.com/advisories/GHSA-fccv-jmmp-qg76): Apache Tomcat Improper Input Validation vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.0-M11) (declared at pom.xml)\n    Fix: Upgrade to 11.0.0-M11\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.16) (declared at pom.xml)\n    Fix: Upgrade to 10.1.16\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0-M1, < 9.0.83) (declared at pom.xml)\n    Fix: Upgrade to 9.0.83\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, < 8.5.96) (declared at pom.xml)\n    Fix: Upgrade to 8.5.96",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2023-46589](https://github.com/advisories/GHSA-fccv-jmmp-qg76): Apache Tomcat Improper Input Validation vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 11.0.0-M1, < 11.0.0-M11) (declared at pom.xml)\n    Fix: Upgrade to 11.0.0-M11\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.16) (declared at pom.xml)\n    Fix: Upgrade to 10.1.16\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0-M1, < 9.0.83) (declared at pom.xml)\n    Fix: Upgrade to 9.0.83\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, < 8.5.96) (declared at pom.xml)\n    Fix: Upgrade to 8.5.96"
+      }
+    },
+    {
+      "id": "CVE-2023-20863",
+      "title": "Spring Framework vulnerable to denial of service",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2023-20863](https://github.com/advisories/GHSA-wxqc-pxw9-g2p8): Spring Framework vulnerable to denial of service\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 6.0.0, < 6.0.8) (declared at pom.xml)\n    Fix: Upgrade to 6.0.8\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.27) (declared at pom.xml)\n    Fix: Upgrade to 5.3.27\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: < 5.2.24.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.24.RELEASE",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2023-20863](https://github.com/advisories/GHSA-wxqc-pxw9-g2p8): Spring Framework vulnerable to denial of service\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 6.0.0, < 6.0.8) (declared at pom.xml)\n    Fix: Upgrade to 6.0.8\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.27) (declared at pom.xml)\n    Fix: Upgrade to 5.3.27\n  - org.springframework:spring-expression:4.3.13.RELEASE (vulnerable range: < 5.2.24.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.24.RELEASE"
+      }
+    },
+    {
+      "id": "CVE-2022-1471",
+      "title": "SnakeYaml Constructor Deserialization Remote Code Execution",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-1471](https://github.com/advisories/GHSA-mjmj-j48q-9wg2): SnakeYaml Constructor Deserialization Remote Code Execution\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.yaml:snakeyaml:1.17 (vulnerable range: <= 1.33) (declared at pom.xml)\n    Fix: Upgrade to 2.0",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2022-1471](https://github.com/advisories/GHSA-mjmj-j48q-9wg2): SnakeYaml Constructor Deserialization Remote Code Execution\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.yaml:snakeyaml:1.17 (vulnerable range: <= 1.33) (declared at pom.xml)\n    Fix: Upgrade to 2.0"
+      }
+    },
+    {
+      "id": "CVE-2022-42252",
+      "title": "Apache Tomcat may reject request containing invalid Content-Length header",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-42252](https://github.com/advisories/GHSA-p22x-g9px-3945): Apache Tomcat may reject request containing invalid Content-Length header\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, < 8.5.83) (declared at pom.xml)\n    Fix: Upgrade to 8.5.83\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0-M1, < 9.0.68) (declared at pom.xml)\n    Fix: Upgrade to 9.0.68\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.0.0-M1, < 10.0.27) (declared at pom.xml)\n    Fix: Upgrade to 10.0.27\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.1) (declared at pom.xml)\n    Fix: Upgrade to 10.1.1",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2022-42252](https://github.com/advisories/GHSA-p22x-g9px-3945): Apache Tomcat may reject request containing invalid Content-Length header\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, < 8.5.83) (declared at pom.xml)\n    Fix: Upgrade to 8.5.83\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0-M1, < 9.0.68) (declared at pom.xml)\n    Fix: Upgrade to 9.0.68\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.0.0-M1, < 10.0.27) (declared at pom.xml)\n    Fix: Upgrade to 10.0.27\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.1.0-M1, < 10.1.1) (declared at pom.xml)\n    Fix: Upgrade to 10.1.1"
+      }
+    },
+    {
+      "id": "CVE-2022-42003",
+      "title": "Uncontrolled Resource Consumption in Jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-42003](https://github.com/advisories/GHSA-jjjh-jjxp-wpff): Uncontrolled Resource Consumption in Jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.4.0-rc1, < 2.12.7.1) (declared at pom.xml)\n    Fix: Upgrade to 2.12.7.1\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.13.0, < 2.13.4.2) (declared at pom.xml)\n    Fix: Upgrade to 2.13.4.2",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2022-42003](https://github.com/advisories/GHSA-jjjh-jjxp-wpff): Uncontrolled Resource Consumption in Jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.4.0-rc1, < 2.12.7.1) (declared at pom.xml)\n    Fix: Upgrade to 2.12.7.1\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.13.0, < 2.13.4.2) (declared at pom.xml)\n    Fix: Upgrade to 2.13.4.2"
+      }
+    },
+    {
+      "id": "CVE-2022-42004",
+      "title": "Uncontrolled Resource Consumption in FasterXML jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-42004](https://github.com/advisories/GHSA-rgv9-q543-rqg4): Uncontrolled Resource Consumption in FasterXML jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.13.0, < 2.13.4) (declared at pom.xml)\n    Fix: Upgrade to 2.13.4\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.4.0-rc1, < 2.12.7.1) (declared at pom.xml)\n    Fix: Upgrade to 2.12.7.1",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2022-42004](https://github.com/advisories/GHSA-rgv9-q543-rqg4): Uncontrolled Resource Consumption in FasterXML jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.13.0, < 2.13.4) (declared at pom.xml)\n    Fix: Upgrade to 2.13.4\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.4.0-rc1, < 2.12.7.1) (declared at pom.xml)\n    Fix: Upgrade to 2.12.7.1"
+      }
+    },
+    {
+      "id": "CVE-2022-25857",
+      "title": "Uncontrolled Resource Consumption in snakeyaml",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-25857](https://github.com/advisories/GHSA-3mc7-4q67-w48m): Uncontrolled Resource Consumption in snakeyaml\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.yaml:snakeyaml:1.17 (vulnerable range: < 1.31) (declared at pom.xml)\n    Fix: Upgrade to 1.31",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2022-25857](https://github.com/advisories/GHSA-3mc7-4q67-w48m): Uncontrolled Resource Consumption in snakeyaml\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.yaml:snakeyaml:1.17 (vulnerable range: < 1.31) (declared at pom.xml)\n    Fix: Upgrade to 1.31"
+      }
+    },
+    {
+      "id": "CVE-2020-10650",
+      "title": "jackson-databind vulnerable to unsafe deserialization",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-10650](https://github.com/advisories/GHSA-rpr3-cw39-3pxh): jackson-databind vulnerable to unsafe deserialization\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: <= 2.9.10.3) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.4",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-10650](https://github.com/advisories/GHSA-rpr3-cw39-3pxh): jackson-databind vulnerable to unsafe deserialization\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: <= 2.9.10.3) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.4"
+      }
+    },
+    {
+      "id": "CVE-2016-1000027",
+      "title": "Pivotal Spring Framework contains unsafe Java deserialization methods",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2016-1000027](https://github.com/advisories/GHSA-4wrc-f8pq-fpqp): Pivotal Spring Framework contains unsafe Java deserialization methods\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: < 6.0.0) (declared at pom.xml)\n    Fix: Upgrade to 6.0.0",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2016-1000027](https://github.com/advisories/GHSA-4wrc-f8pq-fpqp): Pivotal Spring Framework contains unsafe Java deserialization methods\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (vulnerable range: < 6.0.0) (declared at pom.xml)\n    Fix: Upgrade to 6.0.0"
+      }
+    },
+    {
+      "id": "CVE-2022-22970",
+      "title": "Denial of service in Spring Framework",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-22970](https://github.com/advisories/GHSA-hh26-6xwr-ggv7): Denial of service in Spring Framework\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: <= 5.2.21.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.22.RELEASE\n  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.20) (declared at pom.xml)\n    Fix: Upgrade to 5.3.20",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2022-22970](https://github.com/advisories/GHSA-hh26-6xwr-ggv7): Denial of service in Spring Framework\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: <= 5.2.21.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.22.RELEASE\n  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.20) (declared at pom.xml)\n    Fix: Upgrade to 5.3.20"
+      }
+    },
+    {
+      "id": "CVE-2022-22968",
+      "title": "Improper handling of case sensitivity in Spring Framework",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-22968](https://github.com/advisories/GHSA-g5mm-vmx4-3rg7): Improper handling of case sensitivity in Spring Framework\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-context:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.19) (declared at pom.xml)\n    Fix: Upgrade to 5.3.19\n  - org.springframework:spring-context:4.3.13.RELEASE (vulnerable range: < 5.2.21.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.21.RELEASE",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2022-22968](https://github.com/advisories/GHSA-g5mm-vmx4-3rg7): Improper handling of case sensitivity in Spring Framework\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-context:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.19) (declared at pom.xml)\n    Fix: Upgrade to 5.3.19\n  - org.springframework:spring-context:4.3.13.RELEASE (vulnerable range: < 5.2.21.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.21.RELEASE"
+      }
+    },
+    {
+      "id": "CVE-2022-22965",
+      "title": "Remote Code Execution in Spring Framework",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-22965](https://github.com/advisories/GHSA-36p3-wjmg-h94x): Remote Code Execution in Spring Framework\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.18) (declared at pom.xml)\n    Fix: Upgrade to 5.3.18\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.18) (declared at pom.xml)\n    Fix: Upgrade to 5.3.18\n  - org.springframework.boot:spring-boot-starter-web:1.5.9.RELEASE (vulnerable range: < 2.5.12) (declared at pom.xml:74)\n    Fix: Upgrade to 2.5.12\n  - org.springframework.boot:spring-boot-starter-web:1.5.9.RELEASE (vulnerable range: >= 2.6.0, < 2.6.6) (declared at pom.xml:74)\n    Fix: Upgrade to 2.6.6\n  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: < 5.2.20.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.20.RELEASE\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: < 5.2.20.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.20.RELEASE",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml",
+          "pom.xml:74"
+        ],
+        "explanation": "[CVE-2022-22965](https://github.com/advisories/GHSA-36p3-wjmg-h94x): Remote Code Execution in Spring Framework\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.18) (declared at pom.xml)\n    Fix: Upgrade to 5.3.18\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: >= 5.3.0, < 5.3.18) (declared at pom.xml)\n    Fix: Upgrade to 5.3.18\n  - org.springframework.boot:spring-boot-starter-web:1.5.9.RELEASE (vulnerable range: < 2.5.12) (declared at pom.xml:74)\n    Fix: Upgrade to 2.5.12\n  - org.springframework.boot:spring-boot-starter-web:1.5.9.RELEASE (vulnerable range: >= 2.6.0, < 2.6.6) (declared at pom.xml:74)\n    Fix: Upgrade to 2.6.6\n  - org.springframework:spring-beans:4.3.13.RELEASE (vulnerable range: < 5.2.20.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.20.RELEASE\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (vulnerable range: < 5.2.20.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.2.20.RELEASE"
+      }
+    },
+    {
+      "id": "CVE-2020-36518",
+      "title": "Deeply nested json in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36518](https://github.com/advisories/GHSA-57j2-w4cx-62h2): Deeply nested json in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.13.0, <= 2.13.2.0) (declared at pom.xml)\n    Fix: Upgrade to 2.13.2.1\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: <= 2.12.6.0) (declared at pom.xml)\n    Fix: Upgrade to 2.12.6.1",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36518](https://github.com/advisories/GHSA-57j2-w4cx-62h2): Deeply nested json in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.13.0, <= 2.13.2.0) (declared at pom.xml)\n    Fix: Upgrade to 2.13.2.1\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: <= 2.12.6.0) (declared at pom.xml)\n    Fix: Upgrade to 2.12.6.1"
+      }
+    },
+    {
+      "id": "CVE-2020-11996",
+      "title": "Uncontrolled Resource Consumption in Apache Tomcat",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-11996](https://github.com/advisories/GHSA-53hp-jpwq-2jgq): Uncontrolled Resource Consumption in Apache Tomcat\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.0.0-M1, <= 10.0.0-M4) (declared at pom.xml)\n    Fix: Upgrade to 10.0.0-M5\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.35) (declared at pom.xml)\n    Fix: Upgrade to 9.0.35\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, < 8.5.55) (declared at pom.xml)\n    Fix: Upgrade to 8.5.55",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-11996](https://github.com/advisories/GHSA-53hp-jpwq-2jgq): Uncontrolled Resource Consumption in Apache Tomcat\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 10.0.0-M1, <= 10.0.0-M4) (declared at pom.xml)\n    Fix: Upgrade to 10.0.0-M5\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 9.0.0.M1, < 9.0.35) (declared at pom.xml)\n    Fix: Upgrade to 9.0.35\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (vulnerable range: >= 8.5.0, < 8.5.55) (declared at pom.xml)\n    Fix: Upgrade to 8.5.55"
+      }
+    },
+    {
+      "id": "CVE-2020-36189",
+      "title": "Unsafe Deserialization in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36189](https://github.com/advisories/GHSA-vfqx-33qm-g869): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36189](https://github.com/advisories/GHSA-vfqx-33qm-g869): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5"
+      }
+    },
+    {
+      "id": "CVE-2020-36187",
+      "title": "Unsafe Deserialization in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36187](https://github.com/advisories/GHSA-r695-7vr9-jgc2): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36187](https://github.com/advisories/GHSA-r695-7vr9-jgc2): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8"
+      }
+    },
+    {
+      "id": "CVE-2020-36188",
+      "title": "Unsafe Deserialization in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36188](https://github.com/advisories/GHSA-f9xh-2qgp-cq57): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36188](https://github.com/advisories/GHSA-f9xh-2qgp-cq57): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5"
+      }
+    },
+    {
+      "id": "CVE-2020-36183",
+      "title": "Unsafe Deserialization in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36183](https://github.com/advisories/GHSA-9m6f-7xcq-8vf8): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.00, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36183](https://github.com/advisories/GHSA-9m6f-7xcq-8vf8): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.00, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5"
+      }
+    },
+    {
+      "id": "CVE-2020-36184",
+      "title": "Unsafe Deserialization in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36184](https://github.com/advisories/GHSA-m6x4-97wx-4q27): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36184](https://github.com/advisories/GHSA-m6x4-97wx-4q27): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8"
+      }
+    },
+    {
+      "id": "CVE-2020-36180",
+      "title": "Unsafe Deserialization in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36180](https://github.com/advisories/GHSA-8c4j-34r4-xr8g): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36180](https://github.com/advisories/GHSA-8c4j-34r4-xr8g): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5"
+      }
+    },
+    {
+      "id": "CVE-2020-36181",
+      "title": "Unsafe Deserialization in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36181](https://github.com/advisories/GHSA-cvm9-fjm9-3572): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36181](https://github.com/advisories/GHSA-cvm9-fjm9-3572): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5"
+      }
+    },
+    {
+      "id": "CVE-2020-36185",
+      "title": "Unsafe Deserialization in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36185](https://github.com/advisories/GHSA-8w26-6f25-cm9x): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36185](https://github.com/advisories/GHSA-8w26-6f25-cm9x): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8"
+      }
+    },
+    {
+      "id": "CVE-2020-36179",
+      "title": "Unsafe Deserialization in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-36179](https://github.com/advisories/GHSA-9gph-22xh-8x98): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2020-36179](https://github.com/advisories/GHSA-9gph-22xh-8x98): Unsafe Deserialization in jackson-databind\n\nSeverity: HIGH\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.7.0, < 2.9.10.8) (declared at pom.xml)\n    Fix: Upgrade to 2.9.10.8\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (vulnerable range: >= 2.0.0, < 2.6.7.5) (declared at pom.xml)\n    Fix: Upgrade to 2.6.7.5"
+      }
+    },
+    {
+      "id": "CVE-2023-5072",
+      "title": "Java: DoS Vulnerability in JSON-JAVA",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2023-5072](https://github.com/advisories/GHSA-4jq9-2xhw-jpx7): Java: DoS Vulnerability in JSON-JAVA\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.json:json:20171018 (vulnerable range: <= 20230618) (declared at pom.xml:96)\n    Fix: Upgrade to 20231013",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml:96"
+        ],
+        "explanation": "[CVE-2023-5072](https://github.com/advisories/GHSA-4jq9-2xhw-jpx7): Java: DoS Vulnerability in JSON-JAVA\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.json:json:20171018 (vulnerable range: <= 20230618) (declared at pom.xml:96)\n    Fix: Upgrade to 20231013"
+      }
+    },
+    {
+      "id": "CVE-2022-45688",
+      "title": "json stack overflow vulnerability",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-45688](https://github.com/advisories/GHSA-3vqj-43w4-2q58): json stack overflow vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.json:json:20171018 (vulnerable range: < 20230227) (declared at pom.xml:96)\n    Fix: Upgrade to 20230227",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml:96"
+        ],
+        "explanation": "[CVE-2022-45688](https://github.com/advisories/GHSA-3vqj-43w4-2q58): json stack overflow vulnerability\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.json:json:20171018 (vulnerable range: < 20230227) (declared at pom.xml:96)\n    Fix: Upgrade to 20230227"
+      }
+    },
+    {
+      "id": "CVE-2017-5929",
+      "title": "QOS.ch Logback vulnerable to Deserialization of Untrusted Data",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2017-5929](https://github.com/advisories/GHSA-vmfg-rjjm-rjrj): QOS.ch Logback vulnerable to Deserialization of Untrusted Data\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: < 1.2.0) (declared at pom.xml)\n    Fix: Upgrade to 1.2.0\n  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: < 1.2.0) (declared at pom.xml)\n    Fix: Upgrade to 1.2.0",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2017-5929](https://github.com/advisories/GHSA-vmfg-rjjm-rjrj): QOS.ch Logback vulnerable to Deserialization of Untrusted Data\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - ch.qos.logback:logback-classic:1.1.11 (vulnerable range: < 1.2.0) (declared at pom.xml)\n    Fix: Upgrade to 1.2.0\n  - ch.qos.logback:logback-core:1.1.11 (vulnerable range: < 1.2.0) (declared at pom.xml)\n    Fix: Upgrade to 1.2.0"
+      }
+    },
+    {
+      "id": "CVE-2017-18640",
+      "title": "SnakeYAML Entity Expansion during load operation",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2017-18640](https://github.com/advisories/GHSA-rvwf-54qp-4r6v): SnakeYAML Entity Expansion during load operation\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.yaml:snakeyaml:1.17 (vulnerable range: < 1.26) (declared at pom.xml)\n    Fix: Upgrade to 1.26",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2017-18640](https://github.com/advisories/GHSA-rvwf-54qp-4r6v): SnakeYAML Entity Expansion during load operation\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.yaml:snakeyaml:1.17 (vulnerable range: < 1.26) (declared at pom.xml)\n    Fix: Upgrade to 1.26"
+      }
+    },
+    {
+      "id": "CVE-2018-15756",
+      "title": "Denial of Service in Spring Framework",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2018-15756](https://github.com/advisories/GHSA-ffvq-7w96-97p7): Denial of Service in Spring Framework\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: >= 5.1.0.RELEASE, < 5.1.1.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.1.1.RELEASE\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: >= 5.0.0.RELEASE, < 5.0.10.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.0.10.RELEASE\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: >= 4.2.0.RELEASE, < 4.3.20.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 4.3.20.RELEASE",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2018-15756](https://github.com/advisories/GHSA-ffvq-7w96-97p7): Denial of Service in Spring Framework\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: >= 5.1.0.RELEASE, < 5.1.1.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.1.1.RELEASE\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: >= 5.0.0.RELEASE, < 5.0.10.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 5.0.10.RELEASE\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: >= 4.2.0.RELEASE, < 4.3.20.RELEASE) (declared at pom.xml)\n    Fix: Upgrade to 4.3.20.RELEASE"
+      }
+    },
+    {
+      "id": "CVE-2018-1272",
+      "title": "Possible privilege escalation in org.springframework:spring-core",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2018-1272](https://github.com/advisories/GHSA-4487-x383-qpph): Possible privilege escalation in org.springframework:spring-core\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: < 4.3.15) (declared at pom.xml)\n    Fix: Upgrade to 4.3.15\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: >= 5.0.0, < 5.0.5) (declared at pom.xml)\n    Fix: Upgrade to 5.0.5",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "pom.xml"
+        ],
+        "explanation": "[CVE-2018-1272](https://github.com/advisories/GHSA-4487-x383-qpph): Possible privilege escalation in org.springframework:spring-core\n\nSeverity: HIGH\n\nAffected dependencies:\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: < 4.3.15) (declared at pom.xml)\n    Fix: Upgrade to 4.3.15\n  - org.springframework:spring-core:4.3.13.RELEASE (vulnerable range: >= 5.0.0, < 5.0.5) (declared at pom.xml)\n    Fix: Upgrade to 5.0.5"
+      }
+    },
+    {
+      "id": "CWE-477",
+      "title": "Use of Obsolete Function",
+      "category": "Code Quality",
+      "severity": "optional",
+      "description": "The code uses deprecated or obsolete functions, which suggests that the code has not been actively reviewed or maintained.",
+      "storyPoint": 1,
+      "evidence": {
+        "files": [
+          "src/main/java/edu/wisc/my/messages/model/Message.java"
+        ],
+        "explanation": "Message.isValidToday() (line 287) is annotated with @Deprecated, indicating it is an obsolete method that should no longer be used. It remains in the production codebase and may still be called by external code despite being marked as deprecated."
+      }
+    },
+    {
+      "id": "CWE-772",
+      "title": "Missing Release of Resource after Effective Lifetime",
+      "category": "Code Quality",
+      "severity": "potential",
+      "description": "The product does not release a resource after its effective lifetime has ended, i.e., after the resource is no longer needed.",
+      "storyPoint": 3,
+      "evidence": {
+        "files": [
+          "src/main/java/edu/wisc/my/messages/data/MessagesFromTextFile.java"
+        ],
+        "explanation": "In MessagesFromTextFile.allMessages() (line 39), an InputStream is obtained via resource.getInputStream() but is never closed. There is no try-with-resources block or finally clause to close the stream, so the InputStream leaks on every call to allMessages(), potentially exhausting file handles under load."
+      }
+    },
+    {
+      "id": "CWE-775",
+      "title": "Missing Release of File Descriptor or Handle after Effective Lifetime",
+      "category": "Code Quality",
+      "severity": "potential",
+      "description": "The product does not release a file descriptor or handle after its effective lifetime has ended, i.e., after the file descriptor/handle is no longer needed.",
+      "storyPoint": 3,
+      "evidence": {
+        "files": [
+          "src/main/java/edu/wisc/my/messages/data/MessagesFromTextFile.java"
+        ],
+        "explanation": "Same instance as CWE-772: MessagesFromTextFile.allMessages() (line 39) opens an InputStream from a classpath resource but never calls is.close(). The stream is not wrapped in a try-with-resources, so the underlying file descriptor is never released."
+      }
+    },
+    {
+      "id": "CWE-778",
+      "title": "Insufficient Logging",
+      "category": "Credentials & Secrets",
+      "severity": "potential",
+      "description": "When a security-critical event occurs, the product either does not record the event or omits important details about the event when logging it.",
+      "storyPoint": 3,
+      "evidence": {
+        "files": [
+          "src/main/java/edu/wisc/my/messages/controller/MessagesController.java"
+        ],
+        "explanation": "The /admin/allMessages and /admin/message/{id} endpoints in MessagesController have no authentication or authorization controls and no logging of access attempts. Security-relevant events such as access to admin endpoints, forged isMemberOf headers, or audience violations (UserNotInMessageAudienceException, ExpiredMessageException, PrematureMessageException) are not logged at WARN or higher severity. The application logs at TRACE/DEBUG for normal operations but does not record security-critical access events, making it impossible to audit who accessed admin data or detect abuse."
+      }
+    }
+  ]
+}
