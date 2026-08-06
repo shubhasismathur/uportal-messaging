@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Tasks template for modernization plan. Generate this file alongside plan.md to track individual migration tasks.",
+  "metadata": {
+    "planName": "modernization-plan",
+    "projectName": "uportal-messaging",
+    "language": "java",
+    "createdAt": "2026-08-06T12:23:51Z",
+    "version": "1.0"
+  },
+  "tasks": [
+    {
+      "type": "upgrade",
+      "id": "001-upgrade-spring-boot",
+      "description": "Upgrade the application from Java 8 and Spring Boot 1.5.9 to Java 21 and Spring Boot 3.x (latest 3.x release).",
+      "reason": "Spring Boot 1.5.x and Java 8 are end-of-life and contain numerous known CVEs. Upgrading to Spring Boot 3.x and Java 21 brings the application to a fully supported LTS stack, enables Jakarta EE namespace migration (javax.* → jakarta.*), and unblocks downstream Azure SDK integrations.",
+      "requirements": "Upgrade Spring Boot parent from 1.5.9.RELEASE to the latest Spring Boot 3.x release. Upgrade the Java compiler source/target from 1.8 to 21. Perform the jakarta.* namespace migration (javax.* → jakarta.*). Update all dependent libraries to versions compatible with Spring Boot 3.x. Change the packaging strategy from WAR to JAR (embedded server). Ensure the project builds and all unit tests pass after the upgrade.",
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true"
+      }
+    },
+    {
+      "type": "transform",
+      "id": "002-transform-log-to-console",
+      "description": "Migrate application logging from file-based rolling appenders to console-only output.",
+      "reason": "The current logback.xml uses a RollingFileAppender writing to ./logs/. In containerized Azure environments, file-based logging is not collected by the platform log aggregation. Console logging is the cloud-native standard for Azure Container Apps.",
+      "requirements": "Remove all file-based and rolling file appenders from logback configuration. Ensure all log output is directed to the console (stdout/stderr). Remove any local LOG_DIR property references. Preserve existing log levels and logger hierarchy. Ensure the project builds and all tests pass after the change.",
+      "dependencies": ["001-upgrade-spring-boot"],
+      "skills": [
+        {
+          "name": "migration-log-to-console",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true"
+      }
+    },
+    {
+      "type": "security",
+      "id": "003-security-cve-remediation",
+      "description": "Scan all project dependencies for known CVEs and remediate identified vulnerabilities to ensure the application is secure before deployment.",
+      "reason": "The application currently uses Spring Boot 1.5.9 and several old library versions (commons-io 2.6, org.json 20171018, commons-lang3 3.7) which may carry known CVEs. Security remediation is mandatory before cloud deployment.",
+      "requirements": "Upgrade vulnerable dependencies to the minimum patched version. If a CVE fix requires a major version upgrade, document the affected dependency, the current version, the upgraded major version, and the breaking change risk. Verify that the project builds and all tests pass after remediation. Runtime environment: Java 21 / Maven established by previous upgrade task.",
+      "dependencies": ["002-transform-log-to-console"],
+      "skills": [
+        {
+          "name": "validate-cves-and-fix",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true"
+      }
+    },
+    {
+      "type": "deployment",
+      "id": "004-deployment-azure-container-apps",
+      "description": "Containerize the application and deploy it to Azure Container Apps.",
+      "reason": "The application needs to be deployed to Azure as a cloud-native container. Azure Container Apps provides a fully managed serverless container platform suitable for this Spring Boot service.",
+      "requirements": "Generate a Dockerfile suitable for the Java 21 Spring Boot JAR application. Provision or configure an Azure Container Apps environment. Build and push the container image. Deploy the application to Azure Container Apps using managed identity for any Azure resource access. Ensure the application starts successfully and REST endpoints respond correctly after deployment.",
+      "dependencies": ["003-security-cve-remediation"],
+      "targetAzureService": "azurecontainerapp",
+      "resourceStatus": "Create new Azure Container Apps environment",
+      "deploymentTool": "bicep",
+      "skills": [
+        {
+          "name": "azcli-containerapp-deploy",
+          "location": "builtin"
+        }
+      ]
+    }
+  ]
+}
