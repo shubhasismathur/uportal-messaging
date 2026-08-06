@@ -1,0 +1,645 @@
+{
+  "version": "1.0.0",
+  "producer": "Java AppCAT CLI",
+  "metadata": {
+    "analysisStartTime": "2026-08-06T11:19:22.534106354Z",
+    "analysisEndTime": "2026-08-06T11:19:30.712453653Z",
+    "status": "Complete",
+    "privacyMode": "Protected",
+    "privacyModeHelpUrl": "https://aka.ms/appcat-privacy-mode",
+    "targetIds": [
+      "azure-appservice",
+      "azure-aks",
+      "azure-container-apps"
+    ],
+    "targetDisplayNames": [
+      "Azure App Service",
+      "Azure Kubernetes Service",
+      "Azure Container Apps"
+    ],
+    "capabilities": [
+      "openjdk25",
+      "containerization"
+    ],
+    "os": [
+      "linux",
+      "windows"
+    ],
+    "domains": [
+      "java-upgrade",
+      "cloud-readiness",
+      "security"
+    ],
+    "mode": "full",
+    "minimumCveSeverity": "critical"
+  },
+  "summary": {
+    "totalProjects": 1,
+    "totalIssues": 4,
+    "totalIncidents": 7,
+    "totalEffort": 26,
+    "charts": {
+      "severity": {
+        "mandatory": 7,
+        "optional": 0,
+        "potential": 0,
+        "information": 0
+      },
+      "category": {
+        "containerization": 1,
+        "java-version-upgrade": 1,
+        "local-resource-access": 1,
+        "remote-communication": 4
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": ".",
+      "issues": 4,
+      "storyPoints": 26,
+      "properties": {
+        "appName": "uportal-messaging",
+        "jdkVersion": "1.8",
+        "frameworks": [
+          "Spring Boot",
+          "Spring"
+        ],
+        "languages": [
+          "Java",
+          "Python"
+        ],
+        "tools": [
+          "Maven"
+        ]
+      },
+      "incidents": [
+        {
+          "ruleId": "azure-java-version-01000",
+          "incidentId": "99b79a2a-03e7-43c9-bd20-5825bc291e0f",
+          "location": "pom.xml",
+          "locationKind": "File",
+          "line": 122,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 8,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 8,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 8,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=azure/springboot"
+          ]
+        },
+        {
+          "ruleId": "localhost-http-00001",
+          "incidentId": "e2b9d4cd-fa70-415b-bfac-247a38f780e1",
+          "location": "src/test/java/edu/wisc/my/messages/controller/MessagesControllerIT.java",
+          "locationKind": "File",
+          "line": 32,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "unsecure-network-protocol-00000",
+          "incidentId": "016a3061-f439-4e3c-8025-353f65fe9ebe",
+          "location": "src/test/java/edu/wisc/my/messages/controller/MessagesControllerTest.java",
+          "locationKind": "File",
+          "line": 81,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "unsecure-network-protocol-00000",
+          "incidentId": "f2051ab7-ab2b-4a54-8844-aba26d17e99b",
+          "location": "src/test/java/edu/wisc/my/messages/controller/MessagesControllerIT.java",
+          "locationKind": "File",
+          "line": 32,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "unsecure-network-protocol-00000",
+          "incidentId": "4b29068b-9e7d-4b03-88a4-ed2b1c62229a",
+          "location": "src/test/java/edu/wisc/my/messages/model/ActionButtonTest.java",
+          "locationKind": "File",
+          "line": 14,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "unsecure-network-protocol-00000",
+          "incidentId": "c2810ddb-b313-406c-b66d-08cf7b91f8c4",
+          "location": "src/test/java/edu/wisc/my/messages/model/ActionButtonTest.java",
+          "locationKind": "File",
+          "line": 17,
+          "column": 0,
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-appservice": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        },
+        {
+          "ruleId": "dockerfile-00000",
+          "incidentId": "19757277-54be-4764-a598-2e2ad3ebc0fc",
+          "location": "",
+          "locationKind": "",
+          "targets": {
+            "azure-aks": {
+              "effort": 3,
+              "severity": "mandatory"
+            },
+            "azure-container-apps": {
+              "effort": 3,
+              "severity": "mandatory"
+            }
+          },
+          "labels": [
+            "type=violation",
+            "ruleset=cloud-readiness"
+          ]
+        }
+      ]
+    }
+  ],
+  "rules": {
+    "azure-java-version-01000": {
+      "id": "azure-java-version-01000",
+      "description": "The application is using a Java version that has reached the end of support. It is strongly recommended to plan and execute a migration strategy to upgrade your application to a supported Java version.\nSupported Java versions receive long-term support (LTS) from the Java community, including bug fixes and updates. Migrating to a supported version provides you with a stable and well-maintained platform for your application.",
+      "title": "Java Version Has Reached the End of Support",
+      "severity": "mandatory",
+      "effort": 8,
+      "labels": [
+        "target=azure-appservice",
+        "target=azure-aks",
+        "target=azure-container-apps",
+        "source",
+        "domain=java-upgrade",
+        "category=java-version-upgrade",
+        "version",
+        "os=windows",
+        "os=linux"
+      ]
+    },
+    "dockerfile-00000": {
+      "id": "dockerfile-00000",
+      "description": "No Dockerfile was found in the project. This suggests the application may not yet be containerized. \nConsider creating a Dockerfile to enable container-based replatforming to Azure services such as Azure Container Apps or AKS.",
+      "title": "No Dockerfile found",
+      "severity": "mandatory",
+      "effort": 3,
+      "links": [
+        {
+          "url": "https://www.baeldung.com/java-dockerize-app",
+          "title": "Dockerizing a Java Application"
+        }
+      ],
+      "labels": [
+        "target=azure-aks",
+        "target=azure-container-apps",
+        "capability=containerization",
+        "source",
+        "domain=cloud-readiness",
+        "category=containerization",
+        "containerization",
+        "os=windows",
+        "os=linux"
+      ]
+    },
+    "localhost-http-00001": {
+      "id": "localhost-http-00001",
+      "description": "The app is trying to access local resource by HTTP, please try to migrate the resource to cloud",
+      "title": "Local HTTP Calls",
+      "severity": "mandatory",
+      "effort": 3,
+      "labels": [
+        "target=azure-aks",
+        "target=azure-container-apps",
+        "target=azure-appservice",
+        "capability=containerization",
+        "source",
+        "domain=cloud-readiness",
+        "category=local-resource-access",
+        "localhost",
+        "containerization",
+        "os=windows",
+        "os=linux"
+      ]
+    },
+    "unsecure-network-protocol-00000": {
+      "id": "unsecure-network-protocol-00000",
+      "description": "Using secured protocols such as HTTPS and SFTP (over HTTP and FTP) should now be the norm as applications are more and more exposed and interconnected. \nThis CloudReady patterns looks for unescured URI in the source code or deprecated URI libraries. \nIdeally, URLs should be replaced in your source code by secured protocols HTTPS and SFTP (and ensure the infrastructure implements these protocols for the resources your application calls, uses or references).",
+      "title": "Use of unsecured network protocols or URI libraries",
+      "severity": "mandatory",
+      "effort": 3,
+      "links": [
+        {
+          "url": "https://developers.google.com/web/fundamentals/security/encrypt-in-transit/why-https",
+          "title": "Why HTTPS matters"
+        },
+        {
+          "url": "https://www.ssh.com/ssh/sftp/",
+          "title": "SSH File Transfer Protocol (SFTP): Get SFTP client & server"
+        }
+      ],
+      "labels": [
+        "target=azure-aks",
+        "target=azure-container-apps",
+        "target=azure-appservice",
+        "capability=containerization",
+        "source",
+        "domain=cloud-readiness",
+        "category=remote-communication",
+        "containerization",
+        "os=windows",
+        "os=linux"
+      ]
+    }
+  },
+  "security": [
+    {
+      "id": "CVE-2016-1000027",
+      "title": "Pivotal Spring Framework contains unsafe Java deserialization methods",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2016-1000027](https://github.com/advisories/GHSA-4wrc-f8pq-fpqp): Pivotal Spring Framework contains unsafe Java deserialization methods\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2016-1000027](https://github.com/advisories/GHSA-4wrc-f8pq-fpqp): Pivotal Spring Framework contains unsafe Java deserialization methods\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.springframework:spring-web:4.3.13.RELEASE (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2017-5929",
+      "title": "QOS.ch Logback vulnerable to Deserialization of Untrusted Data",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2017-5929](https://github.com/advisories/GHSA-vmfg-rjjm-rjrj): QOS.ch Logback vulnerable to Deserialization of Untrusted Data\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - ch.qos.logback:logback-classic:1.1.11 (declared at pom.xml:75)\n  - ch.qos.logback:logback-core:1.1.11 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2017-5929](https://github.com/advisories/GHSA-vmfg-rjjm-rjrj): QOS.ch Logback vulnerable to Deserialization of Untrusted Data\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - ch.qos.logback:logback-classic:1.1.11 (declared at pom.xml:75)\n  - ch.qos.logback:logback-core:1.1.11 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2018-11307",
+      "title": "Deserialization of Untrusted Data in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2018-11307](https://github.com/advisories/GHSA-qr7j-h6gg-jmgc): Deserialization of Untrusted Data in jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2018-11307](https://github.com/advisories/GHSA-qr7j-h6gg-jmgc): Deserialization of Untrusted Data in jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2018-8014",
+      "title": "The defaults settings for the CORS filter provided in Apache Tomcat are insecure and enable 'supportsCredentials' for all origins",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2018-8014](https://github.com/advisories/GHSA-r4x2-3cq5-hqvp): The defaults settings for the CORS filter provided in Apache Tomcat are insecure and enable 'supportsCredentials' for all origins\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:83"
+        ],
+        "explanation": "[CVE-2018-8014](https://github.com/advisories/GHSA-r4x2-3cq5-hqvp): The defaults settings for the CORS filter provided in Apache Tomcat are insecure and enable 'supportsCredentials' for all origins\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2019-14379",
+      "title": "Deserialization of untrusted data in FasterXML jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2019-14379](https://github.com/advisories/GHSA-6fpp-rgj9-8rwc): Deserialization of untrusted data in FasterXML jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2019-14379](https://github.com/advisories/GHSA-6fpp-rgj9-8rwc): Deserialization of untrusted data in FasterXML jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2019-14540",
+      "title": "Polymorphic Typing issue in FasterXML jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2019-14540](https://github.com/advisories/GHSA-h822-r4r5-v8jg): Polymorphic Typing issue in FasterXML jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2019-14540](https://github.com/advisories/GHSA-h822-r4r5-v8jg): Polymorphic Typing issue in FasterXML jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2019-16335",
+      "title": "Polymorphic Typing issue in FasterXML jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2019-16335](https://github.com/advisories/GHSA-85cw-hj65-qqv9): Polymorphic Typing issue in FasterXML jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2019-16335](https://github.com/advisories/GHSA-85cw-hj65-qqv9): Polymorphic Typing issue in FasterXML jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2019-16942",
+      "title": "Polymorphic Typing in FasterXML jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2019-16942](https://github.com/advisories/GHSA-mx7p-6679-8g3q): Polymorphic Typing in FasterXML jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2019-16942](https://github.com/advisories/GHSA-mx7p-6679-8g3q): Polymorphic Typing in FasterXML jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2019-16943",
+      "title": "jackson-databind polymorphic typing issue",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2019-16943](https://github.com/advisories/GHSA-fmmc-742q-jg75): jackson-databind polymorphic typing issue\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2019-16943](https://github.com/advisories/GHSA-fmmc-742q-jg75): jackson-databind polymorphic typing issue\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2019-17267",
+      "title": "Improper Input Validation in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2019-17267](https://github.com/advisories/GHSA-f3j5-rmmp-3fc5): Improper Input Validation in jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2019-17267](https://github.com/advisories/GHSA-f3j5-rmmp-3fc5): Improper Input Validation in jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2019-17531",
+      "title": "jackson-databind polymorphic typing issue",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2019-17531](https://github.com/advisories/GHSA-gjmw-vf9h-g25v): jackson-databind polymorphic typing issue\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2019-17531](https://github.com/advisories/GHSA-gjmw-vf9h-g25v): jackson-databind polymorphic typing issue\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2019-20330",
+      "title": "Deserialization of Untrusted Data in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2019-20330](https://github.com/advisories/GHSA-gww7-p5w4-wrfv): Deserialization of Untrusted Data in jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2019-20330](https://github.com/advisories/GHSA-gww7-p5w4-wrfv): Deserialization of Untrusted Data in jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2020-1938",
+      "title": "Improper Privilege Management in Tomcat",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-1938](https://github.com/advisories/GHSA-c9hw-wf7x-jp9j): Improper Privilege Management in Tomcat\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:83"
+        ],
+        "explanation": "[CVE-2020-1938](https://github.com/advisories/GHSA-c9hw-wf7x-jp9j): Improper Privilege Management in Tomcat\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2020-8840",
+      "title": "Deserialization of Untrusted Data in jackson-databind",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-8840](https://github.com/advisories/GHSA-4w82-r329-3q67): Deserialization of Untrusted Data in jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2020-8840](https://github.com/advisories/GHSA-4w82-r329-3q67): Deserialization of Untrusted Data in jackson-databind\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2020-9547",
+      "title": "jackson-databind mishandles the interaction between serialization gadgets and typing",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-9547](https://github.com/advisories/GHSA-q93h-jc49-78gg): jackson-databind mishandles the interaction between serialization gadgets and typing\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2020-9547](https://github.com/advisories/GHSA-q93h-jc49-78gg): jackson-databind mishandles the interaction between serialization gadgets and typing\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2020-9548",
+      "title": "jackson-databind mishandles the interaction between serialization gadgets and typing",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2020-9548](https://github.com/advisories/GHSA-p43x-xfjf-5jhr): jackson-databind mishandles the interaction between serialization gadgets and typing\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2020-9548](https://github.com/advisories/GHSA-p43x-xfjf-5jhr): jackson-databind mishandles the interaction between serialization gadgets and typing\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - com.fasterxml.jackson.core:jackson-databind:2.8.10 (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2022-22965",
+      "title": "Remote Code Execution in Spring Framework",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2022-22965](https://github.com/advisories/GHSA-36p3-wjmg-h94x): Remote Code Execution in Spring Framework\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.springframework:spring-beans:4.3.13.RELEASE (declared at pom.xml:75)\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (declared at pom.xml:75)\n  - org.springframework.boot:spring-boot-starter-web:1.5.9.RELEASE (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:75"
+        ],
+        "explanation": "[CVE-2022-22965](https://github.com/advisories/GHSA-36p3-wjmg-h94x): Remote Code Execution in Spring Framework\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.springframework:spring-beans:4.3.13.RELEASE (declared at pom.xml:75)\n  - org.springframework:spring-webmvc:4.3.13.RELEASE (declared at pom.xml:75)\n  - org.springframework.boot:spring-boot-starter-web:1.5.9.RELEASE (declared at pom.xml:75)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2025-24813",
+      "title": "Apache Tomcat: Potential RCE and/or information disclosure and/or information corruption with partial PUT",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2025-24813](https://github.com/advisories/GHSA-83qj-6fr2-vhqg): Apache Tomcat: Potential RCE and/or information disclosure and/or information corruption with partial PUT\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:83"
+        ],
+        "explanation": "[CVE-2025-24813](https://github.com/advisories/GHSA-83qj-6fr2-vhqg): Apache Tomcat: Potential RCE and/or information disclosure and/or information corruption with partial PUT\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2026-41293",
+      "title": "Apache Tomcat - HTTP/2 request headers not validated",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-41293](https://github.com/advisories/GHSA-r29c-68gh-xp6x): Apache Tomcat - HTTP/2 request headers not validated\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:83"
+        ],
+        "explanation": "[CVE-2026-41293](https://github.com/advisories/GHSA-r29c-68gh-xp6x): Apache Tomcat - HTTP/2 request headers not validated\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2026-43512",
+      "title": "Apache Tomcat - Digest authenticator will authenticate any unknown user",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-43512](https://github.com/advisories/GHSA-h6fc-48rj-7qqh): Apache Tomcat - Digest authenticator will authenticate any unknown user\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:83"
+        ],
+        "explanation": "[CVE-2026-43512](https://github.com/advisories/GHSA-h6fc-48rj-7qqh): Apache Tomcat - Digest authenticator will authenticate any unknown user\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    },
+    {
+      "id": "CVE-2026-43515",
+      "title": "Apache Tomcat - Security constraints not correctly applied",
+      "category": "CVE",
+      "severity": "mandatory",
+      "description": "[CVE-2026-43515](https://github.com/advisories/GHSA-5m62-pw8w-7w9f): Apache Tomcat - Security constraints not correctly applied\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions",
+      "evidence": {
+        "files": [
+          "pom.xml:83"
+        ],
+        "explanation": "[CVE-2026-43515](https://github.com/advisories/GHSA-5m62-pw8w-7w9f): Apache Tomcat - Security constraints not correctly applied\n\nSeverity: CRITICAL\n\nAffected dependencies:\n  - org.apache.tomcat.embed:tomcat-embed-core:8.5.23 (declared at pom.xml:83)\n\nRecommended fix:\n  - Review advisory for patched versions"
+      },
+      "storyPoint": 1
+    }
+  ]
+}
