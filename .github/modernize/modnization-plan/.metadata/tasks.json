@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Tasks template for modernization plan. Generate this file alongside plan.md to track individual migration tasks.",
+  "metadata": {
+    "planName": "modnization-plan",
+    "projectName": "uportal-messaging",
+    "language": "java",
+    "createdAt": "2026-08-06T13:07:15Z",
+    "version": "1.0"
+  },
+  "tasks": [
+    {
+      "type": "upgrade",
+      "id": "001-upgrade-springboot3",
+      "description": "Upgrade the application from Spring Boot 1.5.9 / Java 8 to Spring Boot 3.x and Java 17 to establish a modern, supported runtime baseline.",
+      "reason": "Spring Boot 1.5.x reached end-of-life and Java 8 is aging. Upgrading to Spring Boot 3.x with Java 17 brings Jakarta EE namespace migration, active security patches, and compatibility with current Azure Spring Cloud libraries.",
+      "requirements": "Upgrade Spring Boot from 1.5.9.RELEASE to the latest Spring Boot 3.x release. Migrate javax.* imports to jakarta.* where applicable. Update the Java version from 1.8 to 17 in the Maven pom.xml. Ensure the project compiles and all existing unit tests pass after the upgrade. Update any deprecated APIs removed in Spring Boot 3.x.",
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true"
+      },
+      "dependencies": []
+    },
+    {
+      "type": "transform",
+      "id": "002-transform-log-to-console",
+      "description": "Migrate application logging from file-based rolling file appender to console-only output for cloud-native observability.",
+      "reason": "The current logback.xml configures a RollingFileAppender writing to ./logs/. Container environments on Azure do not persist local filesystem logs and rely on stdout/stderr capture. Addresses issues: file-based logging configuration in logback.xml.",
+      "requirements": "Remove the RollingFileAppender configuration from logback.xml. Ensure all log output goes to console (stdout). Remove the LOG_DIR property and file-based appender references. Keep log level and logger hierarchy intact. Ensure the project builds and tests pass.",
+      "skills": [
+        {
+          "name": "migration-log-to-console",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true"
+      },
+      "dependencies": ["001-upgrade-springboot3"]
+    },
+    {
+      "type": "security",
+      "id": "003-security-cve-remediation",
+      "description": "Scan all project dependencies for known CVEs and remediate any identified vulnerabilities to ensure the application is secure before deployment.",
+      "reason": "The project uses several outdated libraries (commons-io 2.6, org.json 20171018, commons-lang3 3.7, Spring Boot 1.5.x) that carry known CVEs. Remediating these vulnerabilities is required before deploying to Azure.",
+      "requirements": "Upgrade vulnerable dependencies to the minimum patched version. If a CVE fix requires a major version upgrade, document the affected dependency, the current version, the upgraded major version, and the breaking change risk. Verify that the project builds and all tests pass after remediation.",
+      "skills": [
+        {
+          "name": "validate-cves-and-fix",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true"
+      },
+      "dependencies": ["002-transform-log-to-console"]
+    },
+    {
+      "type": "deployment",
+      "id": "004-deployment-azure-container-apps",
+      "description": "Containerize and deploy the uportal-messaging application to Azure Container Apps.",
+      "reason": "The application needs to be hosted on Azure as a managed, scalable cloud service. Azure Container Apps is the default deployment target and handles containerization, scaling, and ingress automatically.",
+      "requirements": "Containerize the Spring Boot application by creating a Dockerfile suitable for Azure Container Apps. Provision the Azure Container Apps environment and deploy the application. Use Managed Identity for any Azure service authentication. Create a new Azure Container Apps resource.",
+      "targetAzureService": "azurecontainerapp",
+      "resourceStatus": "Create new Azure Container Apps resource",
+      "deploymentTool": "bicep",
+      "skills": [
+        {
+          "name": "azcli-containerapp-deploy",
+          "location": "builtin"
+        }
+      ],
+      "dependencies": ["003-security-cve-remediation"]
+    }
+  ]
+}
